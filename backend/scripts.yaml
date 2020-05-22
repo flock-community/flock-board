@@ -1,0 +1,18 @@
+scripts:
+  dev:
+    cmd: server.ts
+    allow:
+      net: 127.0.0.1
+      read: ./db
+      write: ./db
+  test:
+    cmd: test/test.ts
+    allow:
+      read: ./db
+      write: ./db
+  prod:
+    cmd: server.ts
+    allow:
+      net: 0.0.0.0
+      read: ./db
+      write: ./db
