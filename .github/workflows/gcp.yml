@@ -45,4 +45,9 @@ jobs:
     - name: Publish
       run: |
         docker push gcr.io/flock-community/flock-board:$GITHUB_SHA
+
+    # Push the Docker image to Google Container Registry
+    - name: Publish
+      run: |
+        gcloud run deploy flock-board --image=gcr.io/flock-community/flock-board:$GITHUB_SHA
         
