@@ -25,7 +25,7 @@ for await (const request of server) {
     } else if (request.url === '/project') {
       request.respond({ body: 'Projects\n' });
     } else if (request.url === '/test') {
-      request.respond({ body: 'test 123\n' });
+      request.respond({ body: 'test kasper\n' });
     } else {
       request.respond({ body: 'Hello World\n' });
     }
