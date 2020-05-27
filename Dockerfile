@@ -9,4 +9,4 @@ USER deno
 COPY ./backend ./backend
 COPY ./frontend ./frontend
 
-CMD ["run", "--allow-net", "./backend/mod.ts"]
+CMD ["run", "--allow-net", "--allow-read", "./backend/mod.ts"]

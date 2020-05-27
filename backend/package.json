@@ -1,0 +1,17 @@
+{
+  "name": "flock-board-backend",
+  "private": true,
+  "dependencies": {
+    "typescript-deno-plugin": "^1.29.0",
+    "typescript": "^3.9.3",
+    "prettier": "^2.0.5"
+  },
+  "prettier": {
+    "bracketSpacing": true,
+    "semi": true,
+    "trailingComma": "all",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2
+  }
+}

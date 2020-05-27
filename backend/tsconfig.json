@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "strict": true,
+    "noEmit": true,
+    "declaration": true,
+    "downlevelIteration": true,
+    "target": "ES2020",
+    "lib": [
+      "esnext"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-deno-plugin"
+      }
+    ]
+  },
+
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}
