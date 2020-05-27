@@ -52,4 +52,5 @@ jobs:
         gcloud run deploy flock-board \
           --image=gcr.io/flock-community/flock-board:$GITHUB_SHA \
           --platform=managed
-        
+          --region=europe-west4
+
