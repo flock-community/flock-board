@@ -1,0 +1,13 @@
+type Project {
+  id: ID!
+  name: string!
+  description: string!
+  timestamp: Instant!
+  state: [ProjectState]!
+}
+
+enum ProjectState {
+  OPEN
+  IN_PROGRESS
+  DONE
+}
