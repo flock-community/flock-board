@@ -39,8 +39,6 @@
     ]
   },
   "devDependencies": {
-    "@flock/graphql-simple-bindings": "^1.0.1",
-    "graphql": "^15.1.0",
-    "prettier": "^2.0.5"
+    "@flock/graphql-simple-bindings": "^1.0.5"
   }
 }
