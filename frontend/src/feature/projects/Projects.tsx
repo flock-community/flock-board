@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Card, CardContent, CardActions } from "@material-ui/core";
 import { getProjects } from "../../clients/project-client";
-import { Project, ProjectState } from "../../model/graphql/TypeScript/board";
+import { Project } from "../../../model/graphql/TypeScript/board";
 
 interface ProjectCardProps {
   project: Project;

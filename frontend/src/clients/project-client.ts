@@ -1,5 +1,4 @@
-import { ProjectState } from "./../model/graphql/TypeScript/board.d";
-import { Project } from "../model/graphql/TypeScript/board";
+import { Project } from "./../../model/graphql/TypeScript/board";
 
 export function getProjects(): Promise<Project[]> {
   const project: Project = {
@@ -7,7 +6,7 @@ export function getProjects(): Promise<Project[]> {
     name: "Project",
     description: "project description",
     timestamp: new Date(),
-    state: ProjectState.OPEN
+    state: "OPEN"
   };
 
   return Promise.resolve([project]);
