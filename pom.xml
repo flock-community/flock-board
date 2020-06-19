@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <groupId>community.flock</groupId>
+    <artifactId>board</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>flock-board-app</name>
+    <description>flock community board</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>community.flock</groupId>
+                <artifactId>graphql-simple-bindings-maven-plugin</artifactId>
+                <version>0.6.1</version>
+                <configuration>
+                    <language>TypeScript</language>
+                    <packageName>community.flock.graphql</packageName>
+                    <sourceDirectory>${project.basedir}/resources/graphql</sourceDirectory>
+                    <targetDirectory>${project.basedir}/frontend/src/model/graphql</targetDirectory>
+                    <scalarsKotlin>
+                        <Instant>java.time.Instant</Instant>
+                        <Date>java.time.LocalDate</Date>
+                    </scalarsKotlin>
+                    <scalarsTypeScript>
+                        <Instant>Date</Instant>
+                        <Date>Date</Date>
+                    </scalarsTypeScript>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>bintray-flock-community-flock-maven</id>
+            <name>bintray-plugins</name>
+            <url>https://dl.bintray.com/flock-community/flock-maven</url>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
