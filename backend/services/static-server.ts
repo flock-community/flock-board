@@ -11,7 +11,10 @@ export interface StaticServer {
 export class StaticServerProduction implements StaticServer {
   async getFile(url: string): Promise<Deno.Reader> {
     const filePath = join('./frontend/build', url);
-    assert((await exists(filePath)) && (await stat(filePath)).isFile);
+    assert(
+      (await exists(filePath)) && (await stat(filePath)).isFile,
+      `File doesn't exist: ${filePath}`,
+    );
     return await Deno.open(filePath);
   }
 }
