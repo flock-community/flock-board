@@ -3,15 +3,13 @@
 // It will be overwritten
 
 export interface Project {
-  id: string;
-  name: string;
-  description: string;
-  timestamp: Instant;
-  state: ProjectState;
+    id: string;
+    name: string;
+    description: string;
+    timestamp: Date;
+    state: ProjectState;
 }
 
 export enum ProjectState {
-  OPEN,
-  IN_PROGRESS,
-  DONE
+    OPEN, IN_PROGRESS, DONE
 }

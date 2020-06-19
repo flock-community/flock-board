@@ -3,7 +3,11 @@ import { Typography, Card, CardContent, CardActions } from "@material-ui/core";
 import { getProjects } from "../../clients/project-client";
 import { Project, ProjectState } from "../../model/graphql/TypeScript/board";
 
-function ProjectCard(project: Project) {
+interface ProjectCardProps {
+  project: Project;
+}
+
+function ProjectCard({ project }: ProjectCardProps) {
   return (
     <Card>
       <CardContent>
@@ -26,7 +30,7 @@ function ProjectCard(project: Project) {
 }
 
 export function Projects() {
-  const [state, setState] = useState<Project[]>();
+  const [state, setState] = useState<Project[]>([]);
 
   useEffect(() => {
     getProjects().then(projects => {
@@ -37,7 +41,9 @@ export function Projects() {
   return (
     <>
       <Typography>Projects</Typography>
-      {state && state.map(project => ProjectCard(project))}
+      {state.map(project => (
+        <ProjectCard project={project} />
+      ))}
     </>
   );
 }

@@ -2,8 +2,8 @@ type Project {
   id: ID!
   name: string!
   description: string!
-  timestamp: Instant!
-  state: [ProjectState]!
+  timestamp: Date!
+  state: ProjectState!
 }
 
 enum ProjectState {
