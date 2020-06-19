@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Card, CardContent, CardActions } from "@material-ui/core";
+import { Typography, Card, CardContent } from "@material-ui/core";
 import { getProjects } from "../../clients/project-client";
 import { Project } from "../../../model/graphql/TypeScript/board";
 
