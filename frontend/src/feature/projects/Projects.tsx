@@ -7,9 +7,15 @@ interface ProjectCardProps {
   project: Project;
 }
 
+const dateFormat = new Intl.DateTimeFormat('en-GB', {
+  year: 'numeric',
+  month: 'long',
+  day: '2-digit',
+});
+
 function ProjectCard({ project }: ProjectCardProps) {
   return (
-    <Card>
+    <Card variant="outlined">
       <CardContent>
         <Typography color="textSecondary" gutterBottom>
           {project.name}
@@ -19,7 +25,7 @@ function ProjectCard({ project }: ProjectCardProps) {
         </Typography>
         <Typography color="textSecondary">{project.state}</Typography>
         <Typography variant="body2" component="p">
-          {project.timestamp.toString()}
+          {dateFormat.format(project.timestamp)}
         </Typography>
       </CardContent>
       {/* <CardActions>
