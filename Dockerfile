@@ -9,4 +9,4 @@ USER deno
 COPY ./backend ./backend
 COPY ./frontend ./frontend
 
-CMD ["PROFILE=production", "run", "--allow-net", "--allow-env", "--allow-read", "./backend/mod.ts"]
+CMD ["run", "--allow-net", "--allow-env", "--allow-read", "./backend/mod.ts"]
