@@ -1,8 +1,8 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Projects } from "../feature/projects/Projects";
-import { NoMatchFound } from "./NoMatchFound";
-import { Homepage } from "../feature/homepage/Homepage";
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Projects } from '../feature/projects/Projects';
+import { NoMatchFound } from './NoMatchFound';
+import { Homepage } from '../feature/homepage/Homepage';
 
 export function AppRouter() {
   return (

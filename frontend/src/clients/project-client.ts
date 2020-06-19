@@ -1,15 +1,22 @@
-import { Project } from "./../../model/graphql/TypeScript/board";
+import { Project } from '../../model/graphql/TypeScript/board';
 
 export function getProjects(): Promise<Project[]> {
-  const project: Project = {
-    id: "id",
-    name: "Project",
-    description: "project description",
-    timestamp: new Date(),
-    state: "OPEN"
-  };
-
-  return Promise.resolve([project]);
+  // return fetch('/projects', {
+  //   method: 'GET',
+  //   headers: {
+  //     Accept: 'application/json',
+  //   },
+  // }).then((it) => it.json() as Promise<Project[]>);
+  //
+  return Promise.resolve([
+    {
+      id: 'id',
+      name: 'Project',
+      description: 'project description',
+      timestamp: new Date(),
+      state: 'OPEN',
+    },
+  ]);
 }
 
 export function postProject(project: Project): Promise<any> {
