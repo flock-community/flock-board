@@ -1,29 +1,34 @@
 import { serve } from 'https://deno.land/std@0.53.0/http/server.ts';
-import { join } from 'https://deno.land/std@0.53.0/path/posix.ts';
-import { exists } from 'https://deno.land/std@0.53.0/fs/exists.ts';
 import { extname } from 'https://deno.land/std/path/mod.ts';
+import { app, createApp } from './app.ts';
 
-const { stat } = Deno;
+createApp();
 
 const server = serve({ port: 8000 });
 console.log('http://localhost:8000/');
 
 for await (const request of server) {
   try {
-    const filePath = join(
-      './frontend/build',
-      request.url,
-      extname(request.url).includes('.') ? '' : 'index.html',
-    );
-    if ((await exists(filePath)) && (await stat(filePath)).isFile) {
+    if (request.url === '/' || extname(request.url).includes('.')) {
+      const url = request.url === '/' ? '/index.html' : request.url;
       request.respond({
-        body: await Deno.open(filePath),
+        body: await app.staticServer.getFile(url),
         headers: new Headers({
-          'content-type': contentType(filePath),
+          'content-type': contentType(url),
         }),
       });
-    } else if (request.url === '/project') {
-      request.respond({ body: 'Projects\n' });
+    } else if (request.url === '/projects' && request.method.toUpperCase() === 'GET') {
+      request.respond({
+        body: JSON.stringify([
+          {
+            id: 'id',
+            name: 'Project',
+            description: 'project description',
+            timestamp: new Date(),
+            state: 'OPEN',
+          },
+        ]),
+      });
     } else if (request.url === '/test') {
       request.respond({ body: 'test kasper\n' });
     } else {
