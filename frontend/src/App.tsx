@@ -1,7 +1,7 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { Projects } from "./feature/projects/Projects";
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
+import { Projects } from './feature/projects/Projects';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         Welcome to the flock board!
       </header>
-      <Projects></Projects>
+      <Projects />
     </div>
   );
 }

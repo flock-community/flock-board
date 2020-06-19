@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Typography, Card, CardContent } from "@material-ui/core";
-import { getProjects } from "../../clients/project-client";
-import { Project } from "../../../model/graphql/TypeScript/board";
+import React, { useState, useEffect } from 'react';
+import { Typography, Card, CardContent } from '@material-ui/core';
+import { getProjects } from '../../clients/project-client';
+import { Project } from '../../../model/graphql/TypeScript/board';
 
 interface ProjectCardProps {
   project: Project;
@@ -33,15 +33,15 @@ export function Projects() {
   const [state, setState] = useState<Project[]>([]);
 
   useEffect(() => {
-    getProjects().then(projects => {
+    getProjects().then((projects) => {
       setState(projects);
     });
-  });
+  }, []);
 
   return (
     <>
       <Typography>Projects</Typography>
-      {state.map(project => (
+      {state.map((project) => (
         <ProjectCard project={project} />
       ))}
     </>
