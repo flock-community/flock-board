@@ -1,8 +1,9 @@
 name: Build Docker and Deploy to GCP
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - master
 
 jobs:
   setup-build-publish-deploy:
@@ -36,7 +37,7 @@ jobs:
         npm run build
 
     - name: Build Docker
-      run: |        
+      run: |
         docker build -t gcr.io/flock-community/flock-board:$GITHUB_SHA \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" .
