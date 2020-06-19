@@ -6,7 +6,9 @@ export function getProjects(): Promise<Project[]> {
     headers: {
       Accept: 'application/json',
     },
-  }).then((it) => it.json() as Promise<Project[]>);
+  })
+    .then((it) => it.json())
+    .then(internalizeProject);
 
   // return Promise.resolve([
   //   {
@@ -17,6 +19,10 @@ export function getProjects(): Promise<Project[]> {
   //     state: 'OPEN',
   //   },
   // ]);
+}
+
+function internalizeProject(json: any) {
+  return json.map((it: any) => ({ ...it, timestamp: new Date(it.timestamp) }));
 }
 
 export function postProject(project: Project): Promise<any> {
