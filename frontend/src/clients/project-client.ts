@@ -1,7 +1,7 @@
 import { Project } from '../../model/graphql/TypeScript/board';
 
 export function getProjects(): Promise<Project[]> {
-  return fetch('/projects', {
+  return fetch('/api/project', {
     method: 'GET',
     headers: {
       Accept: 'application/json',

@@ -9,15 +9,15 @@ console.log('http://localhost:8000/');
 
 for await (const request of server) {
   try {
-    if (request.url === '/' || extname(request.url).includes('.')) {
-      const url = request.url === '/' ? '/index.html' : request.url;
+    if (!request.url.startsWith('/api')) {
+      const url = extname(request.url).includes('.') ? request.url : '/index.html';
       request.respond({
         body: await app.staticServer.getFile(url),
         headers: new Headers({
           'content-type': contentType(url),
         }),
       });
-    } else if (request.url === '/projects' && request.method.toUpperCase() === 'GET') {
+    } else if (request.url === '/api/project' && request.method.toUpperCase() === 'GET') {
       request.respond({
         body: JSON.stringify([
           {
@@ -29,8 +29,6 @@ for await (const request of server) {
           },
         ]),
       });
-    } else if (request.url === '/test') {
-      request.respond({ body: 'test kasper\n' });
     } else {
       request.respond({ body: 'Hello World\n' });
     }
