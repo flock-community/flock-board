@@ -38,7 +38,7 @@ jobs:
 
     - name: Build Docker
       run: |
-        docker build -t gcr.io/flock-community/flock-board:$GITHUB_SHA \
+        docker build --target PROD -t gcr.io/flock-community/flock-board:$GITHUB_SHA \
           --build-arg GITHUB_SHA="$GITHUB_SHA" \
           --build-arg GITHUB_REF="$GITHUB_REF" .
 
