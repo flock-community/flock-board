@@ -24,15 +24,17 @@ for await (const request of server) {
       request.url === "/api/project" && request.method.toUpperCase() === "GET"
     ) {
       request.respond({
-        body: JSON.stringify([
-          {
-            id: "id",
-            name: "Project",
-            description: "project description",
-            timestamp: new Date(),
-            state: "OPEN",
-          },
-        ]),
+        body: JSON.stringify(await app.services.projects.getAll()),
+      });
+    } else if (
+      request.url === "/api/project" &&
+      request.method.toUpperCase() === "POST"
+    ) {
+      const jsonBody = JSON.parse(
+        new TextDecoder().decode(await Deno.readAll(request.body)),
+      );
+      request.respond({
+        body: JSON.stringify(await app.services.projects.create(jsonBody)),
       });
     } else if (request.url === "/api/bla") {
       request.respond({ body: JSON.stringify(await Project.all()) });

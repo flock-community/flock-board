@@ -3,9 +3,14 @@ import {
   StaticServerDevelopment,
   StaticServerProduction,
 } from "./services/static-server.ts";
+import { CrudService, MemoryCrudService } from "./services/crud-service.ts";
+import { Project } from "../frontend/model/graphql/TypeScript/board.ts";
 
 interface App {
   staticServer: StaticServer;
+  services: {
+    projects: CrudService<Project>;
+  };
 }
 
 export let app: App;
@@ -18,5 +23,9 @@ export function createApp() {
     staticServer: dev
       ? new StaticServerDevelopment({ baseUrl: "http://localhost:3000" })
       : new StaticServerProduction(),
+
+    services: {
+      projects: new MemoryCrudService<Project>("project", []),
+    },
   };
 }
