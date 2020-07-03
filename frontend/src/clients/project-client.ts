@@ -1,10 +1,10 @@
-import { Project } from '../../model/graphql/TypeScript/board';
+import { Project } from "../../model/graphql/TypeScript/board";
 
 export function getProjects(): Promise<Project[]> {
-  return fetch('/api/project', {
-    method: 'GET',
+  return fetch("/api/project", {
+    method: "GET",
     headers: {
-      Accept: 'application/json',
+      Accept: "application/json",
     },
   })
     .then((it) => it.json())

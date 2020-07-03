@@ -4,7 +4,7 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  makeStyles
+  makeStyles,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -13,21 +13,21 @@ interface AppLayoutProps {
   title: string;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   main: {
     display: "flex",
     "align-items": "center",
-    "flex-direction": "column"
+    "flex-direction": "column",
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1
-  }
+    flexGrow: 1,
+  },
 }));
 
 export function AppLayout({ children, title }: AppLayoutProps) {
