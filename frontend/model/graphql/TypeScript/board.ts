@@ -2,8 +2,9 @@ export interface Project {
   id: string;
   name: string;
   description: string;
-  timestamp: Date;
+  createdAt: Date;
+  updatedAt: Date;
   state: ProjectState;
 }
 
-export type ProjectState = "OPEN" | "IN_PROGRESS" | "DONE";
+export type ProjectState = 'OPEN' | 'IN_PROGRESS' | 'DONE';

@@ -1,10 +1,10 @@
-import { Project } from "../../model/graphql/TypeScript/board";
+import { Project } from '../../model/graphql/TypeScript/board';
 
 export function getProjects(): Promise<Project[]> {
-  return fetch("/api/project", {
-    method: "GET",
+  return fetch('/api/project', {
+    method: 'GET',
     headers: {
-      Accept: "application/json",
+      Accept: 'application/json',
     },
   })
     .then((it) => it.json())
@@ -22,9 +22,16 @@ export function getProjects(): Promise<Project[]> {
 }
 
 function internalizeProject(json: any) {
-  return json.map((it: any) => ({ ...it, timestamp: new Date(it.timestamp) }));
+  return json.map((it: any) => ({ ...it, createdAt: new Date(it.createdAt), updatedAt: new Date(it.updatedAt) }));
 }
 
-export function postProject(project: Project): Promise<any> {
-  return Promise.resolve({});
+export function postProject(project: Project) {
+  return fetch('/api/project', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(project),
+  });
 }
