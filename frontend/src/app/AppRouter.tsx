@@ -10,7 +10,6 @@ export function AppRouter() {
     <Router>
       <Switch>
         <Route
-          exact
           path="/projects"
           render={(props) => (
             <AppLayout {...props} title="Projects">

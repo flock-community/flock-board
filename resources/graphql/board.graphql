@@ -2,7 +2,8 @@ type Project {
   id: ID!
   name: string!
   description: string!
-  timestamp: Date!
+  createdAt: Date!
+  updatedAt: Date!
   state: ProjectState!
 }
 
