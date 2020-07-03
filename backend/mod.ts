@@ -30,7 +30,7 @@ for await (const request of server) {
           },
         ]),
       });
-    } else if (request.url === '/bla') {
+    } else if (request.url === '/api/bla') {
       request.respond({ body: JSON.stringify(await Project.all()) });
     } else {
       request.respond({ body: 'Hello World\n' });
