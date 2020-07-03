@@ -16,7 +16,6 @@ const dbSocketPath = Deno.env.get("DB_SOCKET_PATH") || "/cloudsql"
 const dbPro = new Database("postgres", {
   database: "postgres",
   host: `${dbSocketPath}/${Deno.env.get("INSTANCE_CONNECTION_NAME")}`,
-  port: 5432,
   username: "postgres",
   password: "gYlAptvf36Em",
 });

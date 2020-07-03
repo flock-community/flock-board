@@ -13,4 +13,4 @@ COPY ./database ./database
 ENV PROFILE=production
 
 RUN deno cache ./backend/mod.ts
-CMD ["run", "--allow-net", "--allow-env", "--allow-read", "./backend/mod.ts"]
+CMD ["run",  "--unstable",  "--allow-all", "./backend/mod.ts"]
