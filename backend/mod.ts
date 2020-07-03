@@ -1,6 +1,7 @@
 import { serve } from 'https://deno.land/std@0.53.0/http/server.ts';
 import { extname } from 'https://deno.land/std/path/mod.ts';
 import { app, createApp } from './app.ts';
+import {Project} from "../database/mod.ts";
 
 createApp();
 
@@ -29,6 +30,8 @@ for await (const request of server) {
           },
         ]),
       });
+    } else if (request.url === '/bla') {
+      request.respond({ body: JSON.stringify(await Project.all()) });
     } else {
       request.respond({ body: 'Hello World\n' });
     }

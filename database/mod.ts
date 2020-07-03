@@ -1,19 +1,14 @@
-import {createConnection} from "https://denolib.com/denolib/typeorm@v0.2.23-rc4/mod.ts";
-import {Project} from "./entity/Project.ts";
+import { Database } from 'https://deno.land/x/denodb/mod.ts';
+import {Project} from "./model/Project.ts";
 
+const db = new Database('postgres', {
+    database: "postgres",
+    host: "127.0.0.1",
+    port: 5432,
+    username: "postgres",
+    password: "gYlAptvf36Em",
+});
 
-createConnection().then(async connection => {
+db.link([Project]);
 
-    console.log("Inserting a new project into the database...");
-    // const project = new Project();
-    // project.name = "Project1";
-    // await connection.manager.save(project);
-    // console.log("Saved a new project with id: " + project.id);
-
-    // console.log("Loading projects from the database...");
-    // const projects = await connection.manager.find(Project);
-    // console.log("Loaded projects: ", projects);
-    //
-    // console.log("Here you can setup and run express/koa/any other framework.");
-
-}).catch(error => console.log(error));
+export {Project}

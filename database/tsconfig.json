@@ -1,8 +1,0 @@
-{
-   "compilerOptions": {
-      "strict": true,
-      "target": "esnext",
-      "experimentalDecorators": true,
-      "sourceMap": true
-   }
-}
