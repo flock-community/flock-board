@@ -16,6 +16,7 @@ const clientPg = new ClientPostgreSQL(clientOptions, {
   user: "postgres",
   password: "gYlAptvf36Em",
 });
+
 const clientMySql = new ClientMySQL(clientOptions, {
   hostname: "localhost",
   port: 3306,
