@@ -8,6 +8,7 @@ USER deno
 
 COPY ./backend ./backend
 COPY ./frontend ./frontend
+COPY ./database ./database
 
 ENV PROFILE=production
 
