@@ -9,7 +9,7 @@ export interface CrudService<E extends Entity> {
   delete(id: E['id']): Promise<void>;
 }
 
-abstract class AbstractCrudService<E extends Entity> implements CrudService<E> {
+export abstract class AbstractCrudService<E extends Entity> implements CrudService<E> {
   protected abstract name: string;
   abstract getAll(): Promise<E[]>;
   abstract updateAll(entities: E[]): Promise<void>;
@@ -39,23 +39,6 @@ abstract class AbstractCrudService<E extends Entity> implements CrudService<E> {
     const entityToDelete = oldEntities.find((it) => it.id === id);
     if (entityToDelete === undefined) throw new EntityNotFoundException(this.name, id);
     await this.updateAll(oldEntities.filter((it) => it.id !== id));
-  }
-}
-
-export class MemoryCrudService<E extends Entity> extends AbstractCrudService<E> {
-  private entities: E[];
-
-  constructor(protected name: string, entities: E[] = []) {
-    super();
-    this.entities = entities;
-  }
-
-  async getAll(): Promise<E[]> {
-    return this.entities;
-  }
-
-  async updateAll(entities: E[]): Promise<void> {
-    this.entities = entities;
   }
 }
 
