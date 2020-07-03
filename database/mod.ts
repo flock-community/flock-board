@@ -1,4 +1,5 @@
 import { Database } from "https://deno.land/x/denodb/mod.ts";
+import { walkSync } from "https://deno.land/std/fs/mod.ts";
 import { Project } from "./model/Project.ts";
 
 const profiles = Deno.env.get("PROFILE")?.split(",") ?? [];
@@ -16,6 +17,10 @@ const dbSocketPath = Deno.env.get("DB_SOCKET_PATH") || "/cloudsql"
 const host = `${dbSocketPath}/${Deno.env.get("INSTANCE_CONNECTION_NAME")}`
 console.log("---", Deno.env.toObject(), "---")
 console.log("---", host, "---")
+console.log("---", Deno, "---")
+for(const f of walkSync("/cloudsql")){
+  console.log(f.path)
+}
 const dbPro = new Database("postgres", {
   database: "postgres",
   host,
