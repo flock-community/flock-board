@@ -39,15 +39,15 @@ export function Projects() {
   const [state, setState] = useState<Project[]>([]);
 
   useEffect(() => {
-    getProjects().then((projects) => {
+    getProjects().then(projects => {
       setState(projects);
     });
   }, []);
 
   return (
     <>
-      <Typography>Projects</Typography>
-      {state.map((project) => (
+      {/* <Typography>Projects</Typography> */}
+      {state.map(project => (
         <ProjectCard project={project} />
       ))}
     </>
