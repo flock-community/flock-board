@@ -20,7 +20,13 @@ export class StaticServerProduction implements StaticServer {
 }
 
 export class StaticServerDevelopment implements StaticServer {
-  getFile(url: string) {
-    return fetch(`http://localhost:3000${url}`).then((it) => it.text());
+  public baseUrl: string;
+
+  constructor(options: { baseUrl: string }) {
+    this.baseUrl = options.baseUrl;
+  }
+
+  getFile(url: string): Promise<string> {
+    return fetch(join(this.baseUrl, url)).then((it) => it.text());
   }
 }

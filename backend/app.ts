@@ -15,6 +15,8 @@ export function createApp() {
   const dev = profiles.includes('development');
 
   app = {
-    staticServer: dev ? new StaticServerDevelopment() : new StaticServerProduction(),
+    staticServer: dev
+      ? new StaticServerDevelopment({ baseUrl: 'http://localhost:3000' })
+      : new StaticServerProduction(),
   };
 }
