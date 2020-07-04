@@ -11,6 +11,5 @@ export class Project extends Model {
     state: DataTypes.enum(["OPEN", "IN_PROGRESS", "DONE"]),
   };
 
-  static defaults = { };
-
+  static defaults = {};
 }

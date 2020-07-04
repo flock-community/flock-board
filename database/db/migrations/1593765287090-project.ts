@@ -8,8 +8,8 @@ export const up: Migration<Schema> = ({ queryBuilder }) => {
     table.id();
     table.string("name", 100).nullable();
     table.string("description", 255).nullable();
-    table.timestamp("created_at")
-    table.timestamp("updated_at")
+    table.timestamp("created_at");
+    table.timestamp("updated_at");
   });
   return queryBuilder.query;
 };

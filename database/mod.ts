@@ -4,17 +4,17 @@ import { Project } from "./model/Project.ts";
 const profiles = Deno.env.get("PROFILE")?.split(",") ?? [];
 const dev = profiles.includes("development");
 
-import config from "./nessie.config.ts"
+import config from "./nessie.config.ts";
 
 if (config?.exposeQueryBuilder) {
   config.client.exposeQueryBuilder = config.exposeQueryBuilder;
 }
 
-await config.client.prepare()
-await config.client.migrate(undefined)
+await config.client.prepare();
+await config.client.migrate(undefined);
 
 const dbDev = new Database("sqlite3", {
-  filepath: "../sqlite.db"
+  filepath: "../sqlite.db",
 });
 
 const dbPro = new Database("postgres", {

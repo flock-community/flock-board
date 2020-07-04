@@ -1,7 +1,6 @@
 import { ClientPostgreSQL } from "https://deno.land/x/nessie/mod.ts";
 import { ClientSQLite } from "https://deno.land/x/nessie/mod.ts";
 
-
 const profiles = Deno.env.get("PROFILE")?.split(",") ?? [];
 const dev = profiles.includes("development");
 
