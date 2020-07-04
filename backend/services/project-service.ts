@@ -34,7 +34,8 @@ export class ProjectService implements CrudService<Project> {
     }
 
     async updateAll(entities: Project[]): Promise<void> {
-        return Promise.resolve()
+        await Promise.all(entities
+            .map(it => this.update(it.id, it)))
     }
 
 }
