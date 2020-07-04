@@ -7,10 +7,10 @@ export class Project extends Model {
   static fields = {
     id: { primaryKey: true, autoIncrement: true },
     name: DataTypes.STRING,
-    destination: DataTypes.STRING,
+    description: DataTypes.STRING,
+    state: DataTypes.enum(["OPEN", "IN_PROGRESS", "DONE"]),
   };
 
-  static defaults = {
-    flightDuration: 2.5,
-  };
+  static defaults = { };
+
 }

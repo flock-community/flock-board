@@ -6,6 +6,7 @@ import {
 import { CrudService } from './services/crud-service.ts';
 import { Project } from '../frontend/model/graphql/TypeScript/board.ts';
 import { MemoryCrudService } from './services/memory-crud-service.ts';
+import {ProjectService} from "./services/project-service.ts";
 
 interface App {
   staticServer: StaticServer;
