@@ -25,11 +25,9 @@ export class ProjectService implements CrudService<Project> {
 
     async update(id: Project["id"], mutation: Partial<Project>): Promise<Project> {
         const project = await ProjectDb.find(id);
-        const entries = Object.entries(mutation)
-            .filter(([_, value]) => value != null)
         return ProjectDb.update(id, {
             ...project,
-            ...Object.fromEntries(entries)
+            ...mutation
         })
     }
 
