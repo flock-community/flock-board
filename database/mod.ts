@@ -13,11 +13,11 @@ if (config?.exposeQueryBuilder) {
 await config.client.prepare();
 await config.client.migrate(undefined);
 
-const dbDev = new Database("sqlite3", {
+const dbDev = () => new Database("sqlite3", {
   filepath: "../sqlite.db",
 });
 
-const dbPro = new Database("postgres", {
+const dbPro = () => new Database("postgres", {
   database: "postgres",
   host: "34.91.180.159",
   port: 5432,
@@ -25,6 +25,6 @@ const dbPro = new Database("postgres", {
   password: "gYlAptvf36Em",
 });
 
-(dev ? dbDev : dbPro).link([Project]);
+(dev ? dbDev() : dbPro()).link([Project]);
 
 export { Project };

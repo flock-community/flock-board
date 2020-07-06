@@ -10,10 +10,10 @@ const clientOptions = {
   seedFolder: "./db/seeds",
 };
 
-const clientDev = new ClientSQLite(clientOptions, "./sqlite.db");
+const clientDev = () =>  new ClientSQLite(clientOptions, "./sqlite.db");
 
 /** Select one of the supported clients */
-const clientPro = new ClientPostgreSQL(clientOptions, {
+const clientPro = () => new ClientPostgreSQL(clientOptions, {
   database: "postgres",
   hostname: "34.91.180.159",
   port: 5432,
@@ -23,7 +23,7 @@ const clientPro = new ClientPostgreSQL(clientOptions, {
 
 /** This is the final config object */
 const config = {
-  client: dev ? clientDev : clientPro,
+  client: dev ? clientDev() : clientPro(),
   exposeQueryBuilder: true,
 };
 
