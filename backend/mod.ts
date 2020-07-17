@@ -28,6 +28,15 @@ for await (const request of server) {
         body: JSON.stringify(await app.services.projects.getAll()),
       });
     } else if (
+      request.url.startsWith("/api/project/") &&
+      request.method.toUpperCase() === "GET"
+    ) {
+      request.respond({
+        body: JSON.stringify(
+          await app.services.projects.get(request.url.split("/api/project/")[1])
+        ),
+      });
+    } else if (
       request.url === "/api/project" &&
       request.method.toUpperCase() === "POST"
     ) {
