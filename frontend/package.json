@@ -50,14 +50,6 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11"
   },
-  "prettier": {
-    "bracketSpacing": true,
-    "semi": true,
-    "trailingComma": "all",
-    "singleQuote": true,
-    "printWidth": 120,
-    "tabWidth": 2
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
