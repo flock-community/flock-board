@@ -39,6 +39,18 @@ for await (const request of server) {
       });
     } else if (
       request.url === "/api/project" &&
+      request.method.toUpperCase() === "PUT"
+    ) {
+      const jsonBody = JSON.parse(
+        new TextDecoder().decode(await Deno.readAll(request.body))
+      );
+      request.respond({
+        body: JSON.stringify(
+          await app.services.projects.update(jsonBody.id, jsonBody)
+        ),
+      });
+    } else if (
+      request.url === "/api/project" &&
       request.method.toUpperCase() === "DELETE"
     ) {
       const jsonBody = JSON.parse(
