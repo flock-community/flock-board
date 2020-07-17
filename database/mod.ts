@@ -1,4 +1,4 @@
-import { Database } from "https://deno.land/x/denodb/mod.ts";
+import { Database } from "https://raw.githubusercontent.com/flock-community/denodb/deno-postgres-socket/mod.ts";
 import { Project } from "./model/Project.ts";
 
 const profiles = Deno.env.get("PROFILE")?.split(",") ?? [];
@@ -19,10 +19,7 @@ const dbDev = () => new Database("sqlite3", {
 
 const dbPro = () => new Database("postgres", {
   database: "postgres",
-  host: "34.91.180.159",
-  port: 5432,
-  username: "postgres",
-  password: "gYlAptvf36Em",
+  host: "/cloudsql/flock-community:europe-west4:flock-board",
 });
 
 (dev ? dbDev() : dbPro()).link([Project]);
