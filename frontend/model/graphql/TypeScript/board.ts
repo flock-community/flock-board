@@ -7,4 +7,4 @@ export interface Project {
   state: ProjectState;
 }
 
-export type ProjectState = 'OPEN' | 'IN_PROGRESS' | 'DONE';
+export type ProjectState = "OPEN" | "IN_PROGRESS" | "DONE";

@@ -18,14 +18,16 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "typescript": "^3.9.3",
-    "ulid": "^2.3.0"
+    "ulid": "^2.3.0",
+    "zod": "^1.9.0",
+    "myzod": "^1.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "graphql": "graphql-simple-bindings '../resources/graphql/*' './model/graphql/TypeScript'",
+    "graphql": "graphql-simple-bindings '../resources/graphql/*' './target/model'",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "eslintConfig": {
