@@ -1,7 +1,9 @@
-import { serve } from "https://deno.land/std@0.53.0/http/server.ts";
+import { serve } from "https://deno.land/std/http/server.ts";
 import { extname } from "https://deno.land/std/path/mod.ts";
 import { app, createApp } from "./app.ts";
-// import { Project } from "../database/mod.ts";
+import { internalizeRequest } from "./utils/request.ts";
+import { routesSchema } from "./model/routes.ts";
+import { api } from "./api.ts";
 
 createApp();
 
@@ -20,59 +22,9 @@ for await (const request of server) {
           "content-type": contentType(url),
         }),
       });
-    } else if (
-      request.url === "/api/project" &&
-      request.method.toUpperCase() === "GET"
-    ) {
-      request.respond({
-        body: JSON.stringify(await app.services.projects.getAll()),
-      });
-    } else if (
-      request.url.startsWith("/api/project/") &&
-      request.method.toUpperCase() === "GET"
-    ) {
-      request.respond({
-        body: JSON.stringify(
-          await app.services.projects.get(request.url.split("/api/project/")[1])
-        ),
-      });
-    } else if (
-      request.url === "/api/project" &&
-      request.method.toUpperCase() === "POST"
-    ) {
-      const jsonBody = JSON.parse(
-        new TextDecoder().decode(await Deno.readAll(request.body))
-      );
-      request.respond({
-        body: JSON.stringify(await app.services.projects.create(jsonBody)),
-      });
-    } else if (
-      request.url === "/api/project" &&
-      request.method.toUpperCase() === "PUT"
-    ) {
-      const jsonBody = JSON.parse(
-        new TextDecoder().decode(await Deno.readAll(request.body))
-      );
-      request.respond({
-        body: JSON.stringify(
-          await app.services.projects.update(jsonBody.id, jsonBody)
-        ),
-      });
-    } else if (
-      request.url === "/api/project" &&
-      request.method.toUpperCase() === "DELETE"
-    ) {
-      const jsonBody = JSON.parse(
-        new TextDecoder().decode(await Deno.readAll(request.body))
-      );
-      await app.services.projects.delete(jsonBody.id);
-      request.respond({
-        status: 204,
-      });
-    } else if (request.url === "/api/bla") {
-      // request.respond({ body: JSON.stringify(await Project.all()) });
     } else {
-      request.respond({ body: "Hello World\n" });
+      const route = routesSchema.parse(await internalizeRequest(request));
+      request.respond(await api(route));
     }
   } catch (e) {
     request.respond({
