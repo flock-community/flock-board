@@ -19,7 +19,7 @@
     "react-scripts": "3.4.1",
     "typescript": "^3.9.3",
     "ulid": "^2.3.0",
-    "zod": "^1.9.0",
+    "zod": "alpha",
     "myzod": "^1.0.2"
   },
   "scripts": {
