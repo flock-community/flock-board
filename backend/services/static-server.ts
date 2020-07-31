@@ -1,6 +1,6 @@
 import { assert } from "https://deno.land/std/testing/asserts.ts";
-import { exists } from "https://deno.land/std@0.53.0/fs/exists.ts";
-import { join } from "https://deno.land/std@0.53.0/path/posix.ts";
+import { exists } from "https://deno.land/std/fs/exists.ts";
+import { join } from "https://deno.land/std/path/posix.ts";
 
 const { stat } = Deno;
 
@@ -13,7 +13,7 @@ export class StaticServerProduction implements StaticServer {
     const filePath = join("./frontend/build", url);
     assert(
       (await exists(filePath)) && (await stat(filePath)).isFile,
-      `File doesn't exist: ${filePath}`,
+      `File doesn't exist: ${filePath}`
     );
     return await Deno.open(filePath);
   }
