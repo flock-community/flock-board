@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   updateProject,
   getProject,
@@ -48,13 +48,14 @@ const newProject: Project = {
 };
 
 export function ProjectForm(props: FormProps) {
-  const { register, handleSubmit } = useForm<ProjectData>();
+  const { register, handleSubmit, control } = useForm<ProjectData>();
   const history = useHistory();
   const classes = useStyles();
   const { id } = useParams();
 
-  const [project, setProject] = useState<Project>(newProject);
-  console.log(project);
+  const [project, setProject] = useState<Project | null>(
+    id == null ? newProject : null
+  );
   useEffect(() => {
     if (id) {
       getProject(id).then((project) => {
@@ -63,6 +64,7 @@ export function ProjectForm(props: FormProps) {
     }
   }, [id]);
 
+  if (project == null) return null;
   return (
     <div className={classes.root}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -80,15 +82,18 @@ export function ProjectForm(props: FormProps) {
           inputRef={register}
           defaultValue={project.description}
         />
-        <Select
-          className={classes.input}
+        <Controller
+          as={
+            <Select className={classes.input}>
+              <MenuItem value={"OPEN"}>Open</MenuItem>
+              <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
+              <MenuItem value={"DONE"}>Done</MenuItem>
+            </Select>
+          }
+          name="state"
+          control={control}
           defaultValue={project.state}
-          inputRef={register}
-        >
-          <MenuItem value={"OPEN"}>Open</MenuItem>
-          <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
-          <MenuItem value={"DONE"}>Done</MenuItem>
-        </Select>
+        />
         <Button type="submit" color={"primary"}>
           Submit
         </Button>
@@ -97,6 +102,7 @@ export function ProjectForm(props: FormProps) {
   );
 
   async function onSubmit(data: ProjectData) {
+    if (project == null) return;
     let response;
     if (id) {
       response = await updateProject({

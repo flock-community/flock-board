@@ -35,7 +35,7 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", {
 function ProjectCard({ project, onDelete }: ProjectCardProps) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const history = useHistory();
-  const { path, url } = useRouteMatch();
+  const { url } = useRouteMatch();
 
   return (
     <Card variant="outlined">
