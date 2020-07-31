@@ -16,8 +16,7 @@ export function AppRouter() {
               <Projects></Projects>
             </AppLayout>
           )}
-        >
-        </Route>
+        ></Route>
         <Route
           exact
           path="/"
@@ -26,8 +25,7 @@ export function AppRouter() {
               <Homepage></Homepage>
             </AppLayout>
           )}
-        >
-        </Route>
+        ></Route>
         <Route component={NoMatchFound}></Route>
       </Switch>
     </Router>
