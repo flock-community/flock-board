@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Button, Grid, Typography } from "@material-ui/core";
-import {
-  getProjects,
-  getProject,
-  updateProject,
-} from "../../clients/project-client";
+import { getProjects, updateProject } from "../../clients/project-client";
 import { Project } from "../../../model/graphql/TypeScript/board";
 import {
   BrowserRouter as Switch,
