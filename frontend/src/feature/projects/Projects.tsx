@@ -1,106 +1,58 @@
 import React, { useState, useEffect } from "react";
-import {
-  Typography,
-  Card,
-  CardContent,
-  Button,
-  Menu,
-  CardActions,
-  MenuItem,
-  IconButton,
-  CardHeader,
-} from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { getProjects, deleteProject } from "../../clients/project-client";
+import { Card, Button, Grid, Typography } from "@material-ui/core";
+import { getProjects, updateProject } from "../../clients/project-client";
 import { Project } from "../../../model/graphql/TypeScript/board";
 import {
   BrowserRouter as Switch,
   Route,
   useRouteMatch,
-  useHistory,
 } from "react-router-dom";
 import { ProjectForm } from "./ProjectForm";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { ProjectCard } from "./ProjectCard";
+import { makeStyles } from "@material-ui/core/styles";
+import { clientResponseHandler } from "../../util/client.hooks";
+import { toast } from "react-toastify";
+import { projectStates } from "../../util/typeValues.hooks";
 
-interface ProjectCardProps {
-  project: Project;
-  onDelete: () => void;
-}
-
-const dateFormat = new Intl.DateTimeFormat("en-GB", {
-  year: "numeric",
-  month: "long",
-  day: "2-digit",
-});
-
-function ProjectCard({ project, onDelete }: ProjectCardProps) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const history = useHistory();
-  const { url } = useRouteMatch();
-
-  return (
-    <Card variant="outlined">
-      <CardHeader
-        action={
-          <>
-            <IconButton onClick={handleClick} aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleEditProject}>Edit</MenuItem>
-              <MenuItem onClick={handleDeleteProject}>Delete</MenuItem>
-            </Menu>
-          </>
-        }
-        title={project.name}
-      />
-      <CardContent>
-        <Typography variant="h5" component="h2">
-          {project.description}
-        </Typography>
-        <Typography color="textSecondary">{project.state}</Typography>
-        <Typography variant="body2" component="p">
-          {dateFormat.format(project.createdAt)}
-        </Typography>
-      </CardContent>
-      <CardActions></CardActions>
-    </Card>
-  );
-
-  async function handleDeleteProject() {
-    const response = await deleteProject(project);
-    if (response.ok) {
-      onDelete();
-    }
-    handleClose();
-  }
-
-  function handleEditProject() {
-    history.push(`${url}/edit/${project.id}`);
-    handleClose();
-  }
-
-  function handleClose() {
-    setAnchorEl(null);
-  }
-
-  function handleClick(event: any) {
-    setAnchorEl(event.currentTarget);
-  }
-}
+const useStyles = makeStyles((theme) => ({
+  list: {
+    padding: theme.spacing(1),
+    width: 250,
+    minHeight: 250,
+  },
+  listStationary: {
+    background: "lightgrey",
+  },
+  listDraggingOver: {
+    background: "lightblue",
+  },
+  item: {
+    userSelect: "none",
+    padding: theme.spacing(2),
+    margin: `0 0 ${theme.spacing(1)}px 0`,
+  },
+  itemStationary: {
+    background: "grey",
+  },
+  itemDragging: {
+    background: "lightgreen",
+  },
+}));
 
 export function Projects() {
-  const [state, setState] = useState<Project[]>([]);
+  const [state, setState] = useState<Project[][]>(projectStates.map((s) => []));
   const { path, url } = useRouteMatch();
   const [trigger, setTrigger] = useState(true);
 
+  const classes = useStyles();
+
   useEffect(() => {
     getProjects().then((projects) => {
-      setState(projects);
+      const projectLanes = projectStates.map((state) =>
+        projects.filter((project) => project.state === state)
+      );
+      setState(projectLanes);
     });
   }, [trigger]);
 
@@ -108,16 +60,59 @@ export function Projects() {
     <>
       <Switch>
         <Route exact path={path}>
-          {state.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              onDelete={() => setTrigger(!trigger)}
-            />
-          ))}
           <Button variant="contained" color="primary" href={`${url}/new`}>
             New project
           </Button>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Grid container spacing={3}>
+              {projectStates.map((status, ind) => (
+                <Droppable key={ind} droppableId={status}>
+                  {(provided, snapshot) => (
+                    <Grid item xs={3}>
+                      <Typography variant="h4">
+                        {status.replace("_", " ")}
+                      </Typography>
+                      <Card
+                        ref={provided.innerRef}
+                        className={`${classes.list} ${
+                          snapshot.isDraggingOver
+                            ? classes.listDraggingOver
+                            : classes.listStationary
+                        }`}
+                      >
+                        {state[ind].map((project, index) => (
+                          <Draggable
+                            key={project.id}
+                            draggableId={project.id}
+                            index={index}
+                          >
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className={`${classes.item} ${
+                                  snapshot.isDragging
+                                    ? classes.itemDragging
+                                    : classes.itemStationary
+                                }`}
+                              >
+                                <ProjectCard
+                                  key={project.id}
+                                  project={project}
+                                  onDelete={() => setTrigger(!trigger)}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                      </Card>
+                    </Grid>
+                  )}
+                </Droppable>
+              ))}
+            </Grid>
+          </DragDropContext>
         </Route>
         <Route path={`${path}/new`}>
           <ProjectForm onSubmit={() => setTrigger(!trigger)} />
@@ -128,4 +123,31 @@ export function Projects() {
       </Switch>
     </>
   );
+
+  function onDragEnd(event: any) {
+    const { source, destination } = event;
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+
+    const oldState = [...state];
+
+    const sourceStatus = source.droppableId;
+    const destinationStatus = destination.droppableId;
+    const fromLane = state[projectStates.indexOf(sourceStatus)];
+    const toLane = state[projectStates.indexOf(destinationStatus)];
+    const project = fromLane[source.index];
+    project.state = destinationStatus;
+    fromLane.splice(source.index, 1);
+    toLane.splice(destination.index, 0, project);
+
+    clientResponseHandler({
+      responsePromise: updateProject(project),
+      onError: () => {
+        setState(oldState);
+        toast.error("Failed to update project");
+      },
+    });
+  }
 }

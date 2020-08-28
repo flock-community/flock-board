@@ -11,15 +11,18 @@
     "@types/jest": "^26.0.8",
     "@types/node": "^14.0.27",
     "@types/react": "^16.9.43",
+    "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-dom": "^16.9.8",
+    "myzod": "^1.0.2",
     "react": "^16.13.1",
+    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-toastify": "^6.0.8",
     "typescript": "^3.9.7",
-    "ulid": "^2.3.0",
-    "myzod": "^1.0.2"
+    "ulid": "^2.3.0"
   },
   "scripts": {
     "postinstall": "npm run graphql",
@@ -48,9 +51,9 @@
   "devDependencies": {
     "@flock/graphql-simple-bindings": "^1.0.5",
     "@types/react-router-dom": "^5.1.5",
-    "prettier": "^2.0.5",
     "husky": "^4.2.5",
-    "lint-staged": "^10.2.11"
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5"
   },
   "husky": {
     "hooks": {

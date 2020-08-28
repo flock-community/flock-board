@@ -16,6 +16,8 @@ import {
 import { useHistory, useParams } from "react-router-dom";
 import { ProjectState, Project } from "../../../model/graphql/TypeScript/board";
 import { ulid } from "ulid";
+import { clientResponseHandler } from "../../util/client.hooks";
+import { toast } from "react-toastify";
 
 interface ProjectData {
   name: string;
@@ -101,26 +103,33 @@ export function ProjectForm(props: FormProps) {
     </div>
   );
 
-  async function onSubmit(data: ProjectData) {
+  function onSubmit(data: ProjectData) {
     if (project == null) return;
-    let response;
+    let responsePromise;
     if (id) {
-      response = await updateProject({
+      responsePromise = updateProject({
         ...project,
         ...data,
         updatedAt: new Date(),
       });
     } else {
-      response = await postProject({
+      responsePromise = postProject({
         ...project,
         ...data,
       });
     }
-    props.onSubmit();
-    if (response.ok) {
-      history.push("/projects");
-    } else {
-      // TODO: error handling
-    }
+
+    clientResponseHandler({
+      responsePromise,
+      onSuccess: () => {
+        props.onSubmit();
+        history.push("/projects");
+        toast.success("Successfully created/updated project!");
+      },
+      onError: () => {
+        props.onSubmit();
+        toast.error("Failed to create/update project");
+      },
+    });
   }
 }
