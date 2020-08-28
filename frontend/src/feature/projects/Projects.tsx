@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Button, Grid, Typography } from "@material-ui/core";
+import { Card, Grid, Typography, Fab } from "@material-ui/core";
 import { getProjects, updateProject } from "../../clients/project-client";
 import { Project } from "../../../model/graphql/TypeScript/board";
 import {
@@ -14,12 +14,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { clientResponseHandler } from "../../util/client.hooks";
 import { toast } from "react-toastify";
 import { projectStates } from "../../util/typeValues.hooks";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
   list: {
     padding: theme.spacing(1),
     width: 250,
-    minHeight: 250,
+    minHeight: "100%",
   },
   listStationary: {
     background: "lightgrey",
@@ -29,14 +30,19 @@ const useStyles = makeStyles((theme) => ({
   },
   item: {
     userSelect: "none",
-    padding: theme.spacing(2),
+    padding: theme.spacing(0.5),
     margin: `0 0 ${theme.spacing(1)}px 0`,
   },
   itemStationary: {
-    background: "grey",
+    background: "unset",
   },
   itemDragging: {
     background: "lightgreen",
+  },
+  fab: {
+    position: "absolute",
+    bottom: theme.spacing(2),
+    right: theme.spacing(2),
   },
 }));
 
@@ -60,16 +66,23 @@ export function Projects() {
     <>
       <Switch>
         <Route exact path={path}>
-          <Button variant="contained" color="primary" href={`${url}/new`}>
+          <Fab
+            variant="extended"
+            className={classes.fab}
+            color="primary"
+            href={`${url}/new`}
+          >
+            <AddIcon />
             New project
-          </Button>
+          </Fab>
           <DragDropContext onDragEnd={onDragEnd}>
-            <Grid container spacing={3}>
+            <Grid container spacing={1}>
+              <Grid item style={{ flexGrow: 1 }} />
               {projectStates.map((status, ind) => (
                 <Droppable key={ind} droppableId={status}>
                   {(provided, snapshot) => (
-                    <Grid item xs={3}>
-                      <Typography variant="h4">
+                    <Grid item>
+                      <Typography variant="h4" align="center">
                         {status.replace("_", " ")}
                       </Typography>
                       <Card
@@ -111,6 +124,7 @@ export function Projects() {
                   )}
                 </Droppable>
               ))}
+              <Grid item style={{ flexGrow: 1 }} />
             </Grid>
           </DragDropContext>
         </Route>

@@ -1,5 +1,5 @@
 export const dateFormat = new Intl.DateTimeFormat("en-GB", {
   year: "numeric",
-  month: "long",
+  month: "short",
   day: "2-digit",
 });

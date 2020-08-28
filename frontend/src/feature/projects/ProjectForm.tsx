@@ -7,17 +7,17 @@ import {
 } from "../../clients/project-client";
 import {
   makeStyles,
-  FormLabel,
-  Input,
   Button,
-  Select,
   MenuItem,
+  TextField,
+  Grid,
 } from "@material-ui/core";
 import { useHistory, useParams } from "react-router-dom";
 import { ProjectState, Project } from "../../../model/graphql/TypeScript/board";
 import { ulid } from "ulid";
 import { clientResponseHandler } from "../../util/client.hooks";
 import { toast } from "react-toastify";
+import { projectStates } from "../../util/typeValues.hooks";
 
 interface ProjectData {
   name: string;
@@ -32,11 +32,10 @@ interface FormProps {
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    "align-items": "center",
-    "flex-direction": "column",
+    justifyContent: "center",
   },
   input: {
-    display: "block",
+    width: 350,
   },
 }));
 
@@ -70,35 +69,48 @@ export function ProjectForm(props: FormProps) {
   return (
     <div className={classes.root}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormLabel>Project name</FormLabel>
-        <Input
-          className={classes.input}
-          name="name"
-          inputRef={register}
-          defaultValue={project.name}
-        />
-        <FormLabel>Project description</FormLabel>
-        <Input
-          className={classes.input}
-          name="description"
-          inputRef={register}
-          defaultValue={project.description}
-        />
-        <Controller
-          as={
-            <Select className={classes.input}>
-              <MenuItem value={"OPEN"}>Open</MenuItem>
-              <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
-              <MenuItem value={"DONE"}>Done</MenuItem>
-            </Select>
-          }
-          name="state"
-          control={control}
-          defaultValue={project.state}
-        />
-        <Button type="submit" color={"primary"}>
-          Submit
-        </Button>
+        <Grid container spacing={2}>
+          <Grid container item justify="center" xs={12}>
+            <TextField
+              className={classes.input}
+              name="name"
+              inputRef={register}
+              defaultValue={project.name}
+              label="name"
+            />
+          </Grid>
+          <Grid container item justify="center" xs={12}>
+            <TextField
+              className={classes.input}
+              name="description"
+              inputRef={register}
+              defaultValue={project.description}
+              multiline={true}
+              label="description"
+            />
+          </Grid>
+
+          <Grid container item justify="center" xs={12}>
+            <Controller
+              as={
+                <TextField select label="Select" className={classes.input}>
+                  {projectStates.map((state) => (
+                    <MenuItem value={state}>{state.replace("_", " ")}</MenuItem>
+                  ))}
+                </TextField>
+              }
+              name="state"
+              control={control}
+              defaultValue={project.state}
+            />
+          </Grid>
+
+          <Grid container item justify="center" xs={12}>
+            <Button variant="contained" type="submit" color={"primary"}>
+              Submit
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </div>
   );
