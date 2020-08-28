@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   Menu,
-  CardActions,
   MenuItem,
   IconButton,
   CardHeader,
@@ -13,12 +12,8 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { deleteProject } from "../../clients/project-client";
 import { Project } from "../../../model/graphql/TypeScript/board";
 import { useRouteMatch, useHistory } from "react-router-dom";
-
-const dateFormat = new Intl.DateTimeFormat("en-GB", {
-  year: "numeric",
-  month: "long",
-  day: "2-digit",
-});
+import { clientResponseHandler } from "../../util/client.hooks";
+import { dateFormat } from "../../util/date.format";
 
 interface ProjectCardProps {
   project: Project;
@@ -52,23 +47,20 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
         title={project.name}
       />
       <CardContent>
-        <Typography variant="h5" component="h2">
-          {project.description}
-        </Typography>
+        <Typography variant="h5">{project.description}</Typography>
         <Typography color="textSecondary">{project.state}</Typography>
         <Typography variant="body2" component="p">
           {dateFormat.format(project.createdAt)}
         </Typography>
       </CardContent>
-      <CardActions></CardActions>
     </Card>
   );
 
   async function handleDeleteProject() {
-    const response = await deleteProject(project);
-    if (response.ok) {
-      onDelete();
-    }
+    clientResponseHandler({
+      responsePromise: deleteProject(project),
+      onSuccess: onDelete,
+    });
     handleClose();
   }
 

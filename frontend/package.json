@@ -20,6 +20,7 @@
     "react-hook-form": "^6.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
+    "react-toastify": "^6.0.8",
     "typescript": "^3.9.7",
     "ulid": "^2.3.0"
   },

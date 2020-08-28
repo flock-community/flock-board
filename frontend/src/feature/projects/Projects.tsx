@@ -10,37 +10,46 @@ import {
 import { ProjectForm } from "./ProjectForm";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { ProjectCard } from "./ProjectCard";
+import { makeStyles } from "@material-ui/core/styles";
+import { clientResponseHandler } from "../../util/client.hooks";
+import { toast } from "react-toastify";
+import { projectStates } from "../../util/typeValues.hooks";
 
-const STATES = ["OPEN", "IN_PROGRESS", "DONE"];
-const grid = 8;
-
-const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
-
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
-
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
-const getListStyle = (isDraggingOver: boolean) => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
-  width: 250,
-  minHeight: 250,
-});
+const useStyles = makeStyles((theme) => ({
+  list: {
+    padding: theme.spacing(1),
+    width: 250,
+    minHeight: 250,
+  },
+  listStationary: {
+    background: "lightgrey",
+  },
+  listDraggingOver: {
+    background: "lightblue",
+  },
+  item: {
+    userSelect: "none",
+    padding: theme.spacing(2),
+    margin: `0 0 ${theme.spacing(1)}px 0`,
+  },
+  itemStationary: {
+    background: "grey",
+  },
+  itemDragging: {
+    background: "lightgreen",
+  },
+}));
 
 export function Projects() {
-  const [state, setState] = useState<Project[][]>(STATES.map((s) => []));
+  const [state, setState] = useState<Project[][]>(projectStates.map((s) => []));
   const { path, url } = useRouteMatch();
   const [trigger, setTrigger] = useState(true);
 
+  const classes = useStyles();
+
   useEffect(() => {
     getProjects().then((projects) => {
-      const projectLanes = STATES.map((state) =>
+      const projectLanes = projectStates.map((state) =>
         projects.filter((project) => project.state === state)
       );
       setState(projectLanes);
@@ -56,16 +65,20 @@ export function Projects() {
           </Button>
           <DragDropContext onDragEnd={onDragEnd}>
             <Grid container spacing={3}>
-              {STATES.map((status, ind) => (
+              {projectStates.map((status, ind) => (
                 <Droppable key={ind} droppableId={status}>
                   {(provided, snapshot) => (
                     <Grid item xs={3}>
-                      <Typography variant="h4" component="h2">
+                      <Typography variant="h4">
                         {status.replace("_", " ")}
                       </Typography>
                       <Card
                         ref={provided.innerRef}
-                        style={getListStyle(snapshot.isDraggingOver)}
+                        className={`${classes.list} ${
+                          snapshot.isDraggingOver
+                            ? classes.listDraggingOver
+                            : classes.listStationary
+                        }`}
                       >
                         {state[ind].map((project, index) => (
                           <Draggable
@@ -78,10 +91,11 @@ export function Projects() {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                style={getItemStyle(
-                                  snapshot.isDragging,
-                                  provided.draggableProps.style
-                                )}
+                                className={`${classes.item} ${
+                                  snapshot.isDragging
+                                    ? classes.itemDragging
+                                    : classes.itemStationary
+                                }`}
                               >
                                 <ProjectCard
                                   key={project.id}
@@ -117,19 +131,23 @@ export function Projects() {
       return;
     }
 
+    const oldState = [...state];
+
     const sourceStatus = source.droppableId;
     const destinationStatus = destination.droppableId;
-
-    // TODO: persist index as well
-    const fromLane = state[STATES.indexOf(sourceStatus)];
-    const toLane = state[STATES.indexOf(destinationStatus)];
+    const fromLane = state[projectStates.indexOf(sourceStatus)];
+    const toLane = state[projectStates.indexOf(destinationStatus)];
     const project = fromLane[source.index];
     project.state = destinationStatus;
     fromLane.splice(source.index, 1);
     toLane.splice(destination.index, 0, project);
-    setTrigger(!trigger);
 
-    // TODO: error handling
-    updateProject(project);
+    clientResponseHandler({
+      responsePromise: updateProject(project),
+      onError: () => {
+        setState(oldState);
+        toast.error("Failed to update project");
+      },
+    });
   }
 }
