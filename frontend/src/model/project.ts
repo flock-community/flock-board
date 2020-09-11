@@ -8,4 +8,5 @@ export const projectSchema: z.Type<Project> = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
   state: z.literals("OPEN", "IN_PROGRESS", "DONE"),
+  color: z.string(),
 });

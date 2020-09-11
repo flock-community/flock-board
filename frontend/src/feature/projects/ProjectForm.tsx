@@ -13,11 +13,20 @@ import {
   Grid,
 } from "@material-ui/core";
 import { useHistory, useParams } from "react-router-dom";
-import { ProjectState, Project } from "../../../model/graphql/TypeScript/board";
+import { ProjectState, Project } from "../../../target/model/board";
 import { ulid } from "ulid";
 import { clientResponseHandler } from "../../util/client.hooks";
 import { toast } from "react-toastify";
 import { projectStates } from "../../util/typeValues.hooks";
+import {
+  red,
+  blue,
+  deepPurple,
+  green,
+  pink,
+  purple,
+  indigo,
+} from "@material-ui/core/colors";
 
 interface ProjectData {
   name: string;
@@ -29,6 +38,16 @@ interface FormProps {
   onSubmit: () => void;
 }
 
+const items = [
+  red[500],
+  blue[500],
+  green[500],
+  pink[500],
+  purple[500],
+  deepPurple[500],
+  indigo[500],
+];
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -39,14 +58,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const newProject: Project = {
-  id: ulid(),
-  name: "",
-  description: "",
-  state: "OPEN",
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+function getNewProject(): Project {
+  return {
+    id: ulid(),
+    name: "",
+    description: "",
+    state: "OPEN",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    color: items[Math.floor(Math.random() * items.length)],
+  };
+}
 
 export function ProjectForm(props: FormProps) {
   const { register, handleSubmit, control } = useForm<ProjectData>();
@@ -55,7 +77,7 @@ export function ProjectForm(props: FormProps) {
   const { id } = useParams();
 
   const [project, setProject] = useState<Project | null>(
-    id == null ? newProject : null
+    id == null ? getNewProject() : null
   );
   useEffect(() => {
     if (id) {
@@ -117,6 +139,7 @@ export function ProjectForm(props: FormProps) {
 
   function onSubmit(data: ProjectData) {
     if (project == null) return;
+
     let responsePromise;
     if (id) {
       responsePromise = updateProject({

@@ -11,34 +11,15 @@ import {
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { deleteProject } from "../../clients/project-client";
-import { Project } from "../../../model/graphql/TypeScript/board";
+import { Project } from "../../../target/model/board";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { clientResponseHandler } from "../../util/client.hooks";
 import { dateFormat } from "../../util/date.format";
-import {
-  red,
-  blue,
-  deepPurple,
-  green,
-  pink,
-  purple,
-  indigo,
-} from "@material-ui/core/colors";
 
 interface ProjectCardProps {
   project: Project;
   onDelete: () => void;
 }
-
-const items = [
-  red[500],
-  blue[500],
-  green[500],
-  pink[500],
-  purple[500],
-  deepPurple[500],
-  indigo[500],
-];
 
 export function ProjectCard({ project, onDelete }: ProjectCardProps) {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -52,7 +33,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
           <Avatar
             aria-label="recipe"
             style={{
-              background: items[Math.floor(Math.random() * items.length)],
+              background: project.color,
             }}
           >
             {project.name[0].toUpperCase()}
