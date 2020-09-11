@@ -58,15 +58,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const newProject: Project = {
-  id: ulid(),
-  name: "",
-  description: "",
-  state: "OPEN",
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  color: items[Math.floor(Math.random() * items.length)],
-};
+function getNewProject(): Project {
+  return {
+    id: ulid(),
+    name: "",
+    description: "",
+    state: "OPEN",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    color: items[Math.floor(Math.random() * items.length)],
+  };
+}
 
 export function ProjectForm(props: FormProps) {
   const { register, handleSubmit, control } = useForm<ProjectData>();
@@ -75,7 +77,7 @@ export function ProjectForm(props: FormProps) {
   const { id } = useParams();
 
   const [project, setProject] = useState<Project | null>(
-    id == null ? newProject : null
+    id == null ? getNewProject() : null
   );
   useEffect(() => {
     if (id) {

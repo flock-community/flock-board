@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { deleteProject } from "../../clients/project-client";
-import { Project } from "../../../model/graphql/TypeScript/board";
+import { Project } from "../../../target/model/board";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { clientResponseHandler } from "../../util/client.hooks";
 import { dateFormat } from "../../util/date.format";

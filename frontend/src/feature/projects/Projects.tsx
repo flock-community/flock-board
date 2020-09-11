@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, Grid, Typography, Fab } from "@material-ui/core";
 import { getProjects, updateProject } from "../../clients/project-client";
-import { Project } from "../../../model/graphql/TypeScript/board";
+import { Project } from "../../../target/model/board";
 import {
   BrowserRouter as Switch,
   Route,
