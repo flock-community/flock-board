@@ -19,10 +19,12 @@ export class ProjectService implements CrudService<Project> {
   }
 
   getAll(): Promise<Project[]> {
-    return ProjectDb.all().map(project => ({
-      ...project,
-      people: project.people.split(",")
-    }));
+    return ProjectDb.all().then(px =>
+      px.map((project: any) => ({
+        ...project,
+        people: project.people.split(",")
+      }))
+    );
   }
 
   async update(
