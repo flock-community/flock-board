@@ -1,7 +1,8 @@
-import type { Entity } from '../model/entity.ts';
-import { AbstractCrudService } from './crud-service.ts';
+import type { Entity } from "../model/entity.ts";
+import { AbstractCrudService } from "./crud-service.ts";
 
-export class MemoryCrudService<E extends Entity> extends AbstractCrudService<E> {
+export class MemoryCrudService<E extends Entity>
+  extends AbstractCrudService<E> {
   private entities: E[];
 
   constructor(protected name: string, entities: E[] = []) {

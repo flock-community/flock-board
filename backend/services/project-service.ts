@@ -21,16 +21,17 @@ export class ProjectService implements CrudService<Project> {
 
   async update(
     id: Project["id"],
-    mutation: Partial<Project>
+    mutation: Partial<Project>,
   ): Promise<Project> {
     const project = await ProjectDb.find(id);
-    return ProjectDb.update(id, {
+    await ProjectDb.deleteById(project.id);
+    return await ProjectDb.create({
       ...project,
-      ...mutation
+      ...mutation,
     });
   }
 
   async updateAll(entities: Project[]): Promise<void> {
-    await Promise.all(entities.map(it => this.update(it.id, it)));
+    await Promise.all(entities.map((it) => this.update(it.id, it)));
   }
 }

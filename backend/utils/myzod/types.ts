@@ -64,8 +64,7 @@ function prettyPrintPath(path: (number | string)[]): string {
   }, "");
 }
 
-export type Eval<T> = T extends any[] | Date
-  ? T
+export type Eval<T> = T extends any[] | Date ? T
   : { [Key in keyof T]: T[Key] } & {};
 export type AnyType = Type<any>;
 export type Infer<T extends AnyType> = T extends Type<infer K> ? Eval<K> : any;
@@ -83,22 +82,21 @@ export type IntersectionResult<T extends AnyType, K extends AnyType> =
       ? T extends ObjectType<infer Shape1>
         ? K extends ObjectType<infer Shape2>
           ? ObjectType<Eval<MergeShapes<Shape1, Shape2>>>
-          : never
         : never
-      : IntersectionType<T, K>
+      : never
+    : IntersectionType<T, K>
     : T extends ArrayType<any>
-    ? K extends ArrayType<any>
-      ? T extends ArrayType<infer S1>
-        ? K extends ArrayType<infer S2>
-          ? ArrayType<IntersectionResult<S1, S2>>
+      ? K extends ArrayType<any>
+        ? T extends ArrayType<infer S1>
+          ? K extends ArrayType<infer S2>
+            ? ArrayType<IntersectionResult<S1, S2>>
           : never
         : never
       : IntersectionType<T, K> //
     : T extends TupleType<any>
-    ? K extends TupleType<any>
-      ? T extends TupleType<infer S1>
-        ? K extends TupleType<infer S2>
-          ? TupleType<Join<S1, S2>>
+      ? K extends TupleType<any>
+        ? T extends TupleType<infer S1>
+          ? K extends TupleType<infer S2> ? TupleType<Join<S1, S2>>
           : never
         : never
       : IntersectionType<T, K>
@@ -110,7 +108,7 @@ type ErrMsg<T> = string | ((value: T) => string);
 type Predicate<T> = { func: (value: T) => boolean; errMsg?: ErrMsg<T> };
 
 const normalizePredicates = <T>(
-  predicate?: Predicate<T>["func"] | Predicate<T> | Predicate<T>[]
+  predicate?: Predicate<T>["func"] | Predicate<T> | Predicate<T>[],
 ): Predicate<T>[] | null => {
   if (!predicate) {
     return null;
@@ -133,7 +131,7 @@ const applyPredicates = (predicates: Predicate<any>[], value: any) => {
             ? typeof predicate.errMsg === "function"
               ? predicate.errMsg(value)
               : predicate.errMsg
-            : "failed anonymous predicate function"
+            : "failed anonymous predicate function",
         );
       }
     }
@@ -150,7 +148,7 @@ const appendPredicate = <T>(
   pred: {
     func: (value: T) => boolean;
     errMsg?: string | ((value: T) => string);
-  }
+  },
 ): Predicate<T>[] => {
   if (!predicates) {
     return [pred];
@@ -207,11 +205,11 @@ export class StringType extends Type<string>
   parse(
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): string {
     if (typeof value !== "string") {
       throw new ValidationError(
-        "expected type to be string but got " + typeOf(value)
+        "expected type to be string but got " + typeOf(value),
       );
     }
     if (this.predicates) {
@@ -225,7 +223,7 @@ export class StringType extends Type<string>
   pattern(regexp: RegExp, errMsg?: ErrMsg<string>): StringType {
     return this.withPredicate(
       (value) => regexp.test(value),
-      errMsg || `expected string to match pattern ${regexp} but did not`
+      errMsg || `expected string to match pattern ${regexp} but did not`,
     );
   }
   min(x: number, errMsg?: ErrMsg<string>): StringType {
@@ -233,7 +231,7 @@ export class StringType extends Type<string>
       (value: string) => value.length >= x,
       errMsg ||
         ((value: string) =>
-          `expected string to have length greater than or equal to ${x} but had length ${value.length}`)
+          `expected string to have length greater than or equal to ${x} but had length ${value.length}`),
     );
   }
   max(x: number, errMsg?: ErrMsg<string>): StringType {
@@ -241,18 +239,18 @@ export class StringType extends Type<string>
       (value: string) => value.length <= x,
       errMsg ||
         ((value: string) =>
-          `expected string to have length less than or equal to ${x} but had length ${value.length}`)
+          `expected string to have length less than or equal to ${x} but had length ${value.length}`),
     );
   }
   valid(list: string[], errMsg?: ErrMsg<string>): StringType {
     return this.withPredicate(
       (value: string) => list.includes(value),
-      errMsg || `expected string to be one of: ${JSON.stringify(list)}`
+      errMsg || `expected string to be one of: ${JSON.stringify(list)}`,
     );
   }
   withPredicate(
     fn: Predicate<string>["func"],
-    errMsg?: ErrMsg<string>
+    errMsg?: ErrMsg<string>,
   ): StringType {
     return new StringType({
       predicate: appendPredicate(this.predicates, { func: fn, errMsg }),
@@ -275,11 +273,11 @@ export class BooleanType extends Type<boolean> implements Defaultable<boolean> {
   parse(
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): boolean {
     if (typeof value !== "boolean") {
       throw new ValidationError(
-        "expected type to be boolean but got " + typeOf(value)
+        "expected type to be boolean but got " + typeOf(value),
       );
     }
     return value;
@@ -313,8 +311,8 @@ export class NumberType extends Type<number>
     this.coerceFlag = opts.coerce;
     this.predicates = normalizePredicates(opts.predicate);
     this.defaultValue = opts.default;
-    (this as any)[coercionTypeSymbol] =
-      !!opts.coerce || opts.default !== undefined;
+    (this as any)[coercionTypeSymbol] = !!opts.coerce ||
+      opts.default !== undefined;
     let self: NumberType = this;
     if (typeof opts.max !== "undefined") {
       self = self.max(opts.max);
@@ -327,7 +325,7 @@ export class NumberType extends Type<number>
   parse(
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): number {
     if (this.coerceFlag && typeof value === "string") {
       const number = parseFloat(value);
@@ -338,7 +336,7 @@ export class NumberType extends Type<number>
     }
     if (typeof value !== "number") {
       throw new ValidationError(
-        "expected type to be number but got " + typeOf(value)
+        "expected type to be number but got " + typeOf(value),
       );
     }
     if (this.predicates) {
@@ -354,7 +352,7 @@ export class NumberType extends Type<number>
       (value) => value >= x,
       errMsg ||
         ((value) =>
-          `expected number to be greater than or equal to ${x} but got ${value}`)
+          `expected number to be greater than or equal to ${x} but got ${value}`),
     );
   }
   max(x: number, errMsg?: ErrMsg<number>): NumberType {
@@ -362,7 +360,7 @@ export class NumberType extends Type<number>
       (value) => value <= x,
       errMsg ||
         ((value) =>
-          `expected number to be less than or equal to ${x} but got ${value}`)
+          `expected number to be less than or equal to ${x} but got ${value}`),
     );
   }
   coerce(value?: boolean): NumberType {
@@ -374,7 +372,7 @@ export class NumberType extends Type<number>
   }
   withPredicate(
     fn: Predicate<number>["func"],
-    errMsg?: ErrMsg<number>
+    errMsg?: ErrMsg<number>,
   ): NumberType {
     return new NumberType({
       coerce: this.coerceFlag,
@@ -414,7 +412,7 @@ export class BigIntType extends Type<bigint>
   parse(
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): bigint {
     try {
       const int = BigInt(value);
@@ -428,7 +426,7 @@ export class BigIntType extends Type<bigint>
       }
       throw new ValidationError(
         "expected type to be bigint interpretable - " +
-          err.message.toLowerCase()
+          err.message.toLowerCase(),
       );
     }
   }
@@ -440,7 +438,7 @@ export class BigIntType extends Type<bigint>
       (value) => value >= x,
       errMsg ||
         ((value) =>
-          `expected bigint to be greater than or equal to ${x} but got ${value}`)
+          `expected bigint to be greater than or equal to ${x} but got ${value}`),
     );
   }
   max(x: number | bigint, errMsg?: ErrMsg<bigint>): BigIntType {
@@ -448,12 +446,12 @@ export class BigIntType extends Type<bigint>
       (value) => value <= x,
       errMsg ||
         ((value) =>
-          `expected bigint to be less than or equal to ${x} but got ${value}`)
+          `expected bigint to be less than or equal to ${x} but got ${value}`),
     );
   }
   withPredicate(
     fn: Predicate<bigint>["func"],
-    errMsg?: ErrMsg<bigint>
+    errMsg?: ErrMsg<bigint>,
   ): BigIntType {
     return new BigIntType({
       default: this.defaultValue,
@@ -472,7 +470,7 @@ export class UndefinedType extends Type<undefined> {
   parse(value: unknown): undefined {
     if (value !== undefined) {
       throw new ValidationError(
-        "expected type to be undefined but got " + typeOf(value)
+        "expected type to be undefined but got " + typeOf(value),
       );
     }
     return value;
@@ -490,7 +488,7 @@ export class NullType extends Type<null> implements Defaultable<null> {
   parse(value: unknown = this.defaulted ? null : undefined): null {
     if (value !== null) {
       throw new ValidationError(
-        "expected type to be null but got " + typeOf(value)
+        "expected type to be null but got " + typeOf(value),
       );
     }
     return value;
@@ -515,12 +513,15 @@ export class LiteralType<T extends Literal> extends Type<T>
   }
   parse(value: unknown = this.defaultValue): T {
     if (value !== this.literal) {
-      const typeofValue =
-        typeof value !== "object" ? JSON.stringify(value) : typeOf(value);
+      const typeofValue = typeof value !== "object"
+        ? JSON.stringify(value)
+        : typeOf(value);
       throw new VealidationError(
-        `expected value to be literal ${JSON.stringify(
-          this.literal
-        )} but got ${typeofValue}`
+        `expected value to be literal ${
+          JSON.stringify(
+            this.literal,
+          )
+        } but got ${typeofValue}`,
       );
     }
     return value as T;
@@ -541,7 +542,7 @@ export class UnknownType extends Type<unknown> implements Defaultable<unknown> {
   parse(
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): unknown {
     return value;
   }
@@ -585,11 +586,10 @@ export class NullableType<T extends AnyType> extends Type<Infer<T> | null>
     private readonly schema: T,
     private readonly defaultValue?:
       | Nullable<Infer<T>>
-      | (() => Nullable<Infer<T>>)
+      | (() => Nullable<Infer<T>>),
   ) {
     super();
-    (this as any)[coercionTypeSymbol] =
-      this.defaultValue !== undefined ||
+    (this as any)[coercionTypeSymbol] = this.defaultValue !== undefined ||
       (this.schema as any)[coercionTypeSymbol];
     (this as any)[shapekeysSymbol] = (this.schema as any)[shapekeysSymbol];
     (this as any)[allowUnknownSymbol] = (this.schema as any)[
@@ -600,7 +600,7 @@ export class NullableType<T extends AnyType> extends Type<Infer<T> | null>
     //@ts-ignore
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): Infer<T> | null {
     if (value === null) {
       return null;
@@ -650,10 +650,11 @@ export class DateType extends Type<Date>
   parse(
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): Date {
-    const date =
-      typeof value === "string" ? stringToDate(value) : assertDate(value);
+    const date = typeof value === "string"
+      ? stringToDate(value)
+      : assertDate(value);
     if (this.predicates) {
       applyPredicates(this.predicates, date);
     }
@@ -680,10 +681,8 @@ export const keySignature = Symbol.for("keySignature");
 export type ObjectShape = { [key: string]: AnyType; [keySignature]?: AnyType };
 
 type OptionalKeys<T extends ObjectShape> = {
-  [key in keyof T]: undefined extends Infer<T[key]>
-    ? key extends symbol
-      ? never
-      : key
+  [key in keyof T]: undefined extends Infer<T[key]> ? key extends symbol ? never
+  : key
     : never;
 }[keyof T];
 
@@ -696,39 +695,34 @@ type InferKeySignature<T extends ObjectShape> = T extends {
   [keySignature]: AnyType;
 }
   ? T extends { [keySignature]: infer KeySig }
-    ? KeySig extends AnyType
-      ? { [key: string]: Infer<KeySig> }
-      : {}
+    ? KeySig extends AnyType ? { [key: string]: Infer<KeySig> }
     : {}
+  : {}
   : {};
 
 type InferObjectShape<T extends ObjectShape> = Eval<
-  InferKeySignature<T> &
-    { [key in OptionalKeys<T>]?: T[key] extends Type<infer K> ? K : any } &
-    { [key in RequiredKeys<T>]: T[key] extends Type<infer K> ? K : any }
+  & InferKeySignature<T>
+  & { [key in OptionalKeys<T>]?: T[key] extends Type<infer K> ? K : any }
+  & { [key in RequiredKeys<T>]: T[key] extends Type<infer K> ? K : any }
 >;
 
 export type ToUnion<T extends any[]> = T[number];
 export type PartialShape<T extends ObjectShape> = {
-  [key in keyof T]: T[key] extends OptionalType<any>
-    ? T[key]
+  [key in keyof T]: T[key] extends OptionalType<any> ? T[key]
     : OptionalType<T[key]>;
 };
 export type DeepPartialShape<T extends ObjectShape> = {
   [key in keyof T]: T[key] extends ObjectType<infer K>
     ? OptionalType<ObjectType<DeepPartialShape<K>>>
-    : T[key] extends OptionalType<any>
-    ? T[key]
+    : T[key] extends OptionalType<any> ? T[key]
     : OptionalType<T[key]>;
 };
 
 type MergeShapes<T extends ObjectShape, K extends ObjectShape> = {
   [key in keyof (T & K)]: key extends keyof T
-    ? key extends keyof K
-      ? IntersectionResult<T[key], K[key]>
-      : T[key]
-    : key extends keyof K
-    ? K[key]
+    ? key extends keyof K ? IntersectionResult<T[key], K[key]>
+    : T[key]
+    : key extends keyof K ? K[key]
     : never;
 };
 
@@ -762,10 +756,9 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
     (this as any)[keySignature] = this.objectShape[keySignature];
     (this as any)[allowUnknownSymbol] = this.allowUnknown;
     (this as any)[shapekeysSymbol] = keys;
-    (this as any)[coercionTypeSymbol] =
-      this.defaultValue !== undefined ||
+    (this as any)[coercionTypeSymbol] = this.defaultValue !== undefined ||
       Object.values(this.objectShape).some(
-        (schema) => (schema as any)[coercionTypeSymbol]
+        (schema) => (schema as any)[coercionTypeSymbol],
       ) ||
       !!(
         this.objectShape[keySignature] &&
@@ -776,11 +769,11 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
       : this.defaultValue,
-    parseOpts: ObjectOptions<any> & PathOptions = {}
+    parseOpts: ObjectOptions<any> & PathOptions = {},
   ): InferObjectShape<T> {
     if (typeof value !== "object") {
       throw new ValidationError(
-        "expected type to be object but got " + typeOf(value)
+        "expected type to be object but got " + typeOf(value),
       );
     }
     if (value === null) {
@@ -788,15 +781,14 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
     }
     if (Array.isArray(value)) {
       throw new ValidationError(
-        "expected type to be regular object but got array"
+        "expected type to be regular object but got array",
       );
     }
 
     const keys: string[] = (this as any)[shapekeysSymbol];
-    const allowUnknown =
-      typeof parseOpts.allowUnknown === "boolean"
-        ? parseOpts.allowUnknown
-        : this.allowUnknown;
+    const allowUnknown = typeof parseOpts.allowUnknown === "boolean"
+      ? parseOpts.allowUnknown
+      : this.allowUnknown;
     const keySig = this.objectShape[keySignature];
 
     if (!allowUnknown && !keySig) {
@@ -808,7 +800,7 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
       }
       if (illegalKeys.length > 0) {
         throw new ValidationError(
-          "unexpected keys on object: " + JSON.stringify(illegalKeys)
+          "unexpected keys on object: " + JSON.stringify(illegalKeys),
         );
       }
     }
@@ -830,9 +822,9 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
           const path = err.path ? [key, ...err.path] : [key];
           const msg = parseOpts.suppressPathErrMsg
             ? err.message
-            : `error parsing object at path: "${prettyPrintPath(path)}" - ${
-                err.message
-              }`;
+            : `error parsing object at path: "${
+              prettyPrintPath(path)
+            }" - ${err.message}`;
           throw new ValidationError(msg, path);
         }
       }
@@ -861,9 +853,9 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
           const path = err.path ? [key, ...err.path] : [key];
           const msg = parseOpts.suppressPathErrMsg
             ? err.message
-            : `error parsing object at path: "${prettyPrintPath(path)}" - ${
-                err.message
-              }`;
+            : `error parsing object at path: "${
+              prettyPrintPath(path)
+            }" - ${err.message}`;
           throw new ValidationError(msg, path);
         }
       }
@@ -874,9 +866,7 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
     }
 
     const convVal: any = (this as any)[coercionTypeSymbol]
-      ? allowUnknown
-        ? { ...value }
-        : {}
+      ? allowUnknown ? { ...value } : {}
       : undefined;
 
     for (const key of keys) {
@@ -887,7 +877,7 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
           !(value as any).hasOwnProperty(key)
         ) {
           throw new ValidationError(
-            `expected key "${key}" of unknown type to be present on object`
+            `expected key "${key}" of unknown type to be present on object`,
           );
         }
         if (convVal) {
@@ -901,9 +891,9 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
         const path = err.path ? [key, ...err.path] : [key];
         const msg = parseOpts.suppressPathErrMsg
           ? err.message
-          : `error parsing object at path: "${prettyPrintPath(path)}" - ${
-              err.message
-            }`;
+          : `error parsing object at path: "${
+            prettyPrintPath(path)
+          }" - ${err.message}`;
         throw new ValidationError(msg, path);
       }
     }
@@ -930,7 +920,7 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
           }
           return acc;
         },
-        {}
+        {},
       );
       const selfKeySig = this.objectShape[keySignature];
       const targetKeySig: AnyType | undefined = (schema as any)[keySignature];
@@ -946,31 +936,29 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
   }
 
   pick<
-    K extends T extends { [keySignature]: AnyType }
-      ? string
-      : StringTypes<keyof T>
+    K extends T extends { [keySignature]: AnyType } ? string
+      : StringTypes<keyof T>,
   >(
     keys: K[],
     opts?: ObjectOptions<
       Eval<
-        Pick<T, Extract<StringTypes<keyof T>, ToUnion<typeof keys>>> &
-          (T extends { [keySignature]: AnyType }
-            ? T extends { [keySignature]: infer KeySig }
-              ? { [key in Exclude<ToUnion<typeof keys>, keyof T>]: KeySig }
-              : {}
-            : {})
+        & Pick<T, Extract<StringTypes<keyof T>, ToUnion<typeof keys>>>
+        & (T extends { [keySignature]: AnyType }
+          ? T extends { [keySignature]: infer KeySig }
+            ? { [key in Exclude<ToUnion<typeof keys>, keyof T>]: KeySig }
+          : {}
+          : {})
       >
-    >
+    >,
   ): ObjectType<
     Eval<
-      Pick<T, Extract<StringTypes<keyof T>, ToUnion<typeof keys>>> &
-        (T extends { [keySignature]: AnyType }
-          ? T extends { [keySignature]: infer KeySig }
-            ? {
-                [key in Exclude<ToUnion<typeof keys>, keyof T>]: KeySig;
-              }
-            : {}
-          : {})
+      & Pick<T, Extract<StringTypes<keyof T>, ToUnion<typeof keys>>>
+      & (T extends { [keySignature]: AnyType }
+        ? T extends { [keySignature]: infer KeySig } ? {
+          [key in Exclude<ToUnion<typeof keys>, keyof T>]: KeySig;
+        }
+        : {}
+        : {})
     >
   > {
     const pickedShape = keys.reduce<any>((acc, key) => {
@@ -985,24 +973,24 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
 
   omit<K extends StringTypes<keyof T>>(
     keys: K[],
-    opts?: ObjectOptions<Eval<Omit<T, ToUnion<typeof keys>>>>
+    opts?: ObjectOptions<Eval<Omit<T, ToUnion<typeof keys>>>>,
   ): ObjectType<Eval<Omit<T, ToUnion<typeof keys>>>> {
     const pickedKeys: K[] = ((this as any)[shapekeysSymbol] as K[]).filter(
-      (x: K) => !keys.includes(x)
+      (x: K) => !keys.includes(x),
     );
     if (!(this as any)[keySignature]) {
       return this.pick(pickedKeys as any, opts as any) as any;
     }
     return (this.pick(pickedKeys as any, opts as any) as AnyType).and(
-      new ObjectType({ [keySignature]: (this as any)[keySignature] })
+      new ObjectType({ [keySignature]: (this as any)[keySignature] }),
     );
   }
 
   partial<K extends ObjectOptions<Eval<DeepPartialShape<T>>> & { deep: true }>(
-    opts: K
+    opts: K,
   ): ObjectType<Eval<DeepPartialShape<T>>>;
   partial<K extends ObjectOptions<Eval<PartialShape<T>>> & PartialOpts>(
-    opts?: K
+    opts?: K,
   ): ObjectType<Eval<PartialShape<T>>>;
   partial(opts?: any): any {
     const originalShape: ObjectShape = this.objectShape;
@@ -1032,7 +1020,7 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
 
   withPredicate(
     fn: Predicate<InferObjectShape<T>>["func"],
-    errMsg?: ErrMsg<InferObjectShape<T>>
+    errMsg?: ErrMsg<InferObjectShape<T>>,
   ): ObjectType<T> {
     return new ObjectType(this.objectShape, {
       default: this.defaultValue,
@@ -1042,7 +1030,7 @@ export class ObjectType<T extends ObjectShape> extends Type<InferObjectShape<T>>
   }
 
   default(
-    value: InferObjectShape<T> | (() => InferObjectShape<T>)
+    value: InferObjectShape<T> | (() => InferObjectShape<T>),
   ): ObjectType<T> {
     return new ObjectType(this.objectShape, {
       default: value,
@@ -1072,7 +1060,7 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
   private readonly coerceFn?: (v: any) => Infer<T>[];
   private readonly _parse: (
     value: unknown,
-    parseOptions?: PathOptions & ObjectOptions<any>
+    parseOptions?: PathOptions & ObjectOptions<any>,
   ) => any;
 
   constructor(private readonly schema: T, opts: ArrayOptions<T> = {}) {
@@ -1081,21 +1069,19 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
     this.defaultValue = opts.default;
     this.coerceFn = opts.coerce;
 
-    (this as any)[coercionTypeSymbol] =
-      typeof this.coerceFn === "function" ||
+    (this as any)[coercionTypeSymbol] = typeof this.coerceFn === "function" ||
       this.defaultValue !== undefined ||
       (this.schema as any)[coercionTypeSymbol];
 
-    this._parse =
-      this.schema instanceof ObjectType ||
-      this.schema instanceof ArrayType ||
-      this.schema instanceof LazyType
-        ? (elem: unknown, parseOptions?: ObjectOptions<any>) =>
-            (this.schema.parse as any)(elem, {
-              allowUnknown: parseOptions?.allowUnknown,
-              suppressPathErrMsg: true,
-            })
-        : (elem: unknown) => this.schema.parse(elem);
+    this._parse = this.schema instanceof ObjectType ||
+        this.schema instanceof ArrayType ||
+        this.schema instanceof LazyType
+      ? (elem: unknown, parseOptions?: ObjectOptions<any>) =>
+        (this.schema.parse as any)(elem, {
+          allowUnknown: parseOptions?.allowUnknown,
+          suppressPathErrMsg: true,
+        })
+      : (elem: unknown) => this.schema.parse(elem);
 
     let self: ArrayType<T> = this;
     if (typeof opts.length !== "undefined") {
@@ -1116,7 +1102,7 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
       : this.defaultValue,
-    parseOptions?: PathOptions & ObjectOptions<any> & { coerced?: boolean }
+    parseOptions?: PathOptions & ObjectOptions<any> & { coerced?: boolean },
   ): Infer<T>[] {
     if (
       typeof value === "string" &&
@@ -1133,7 +1119,7 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
           throw e;
         }
         throw new ValidationError(
-          "error coercing string value to array - " + e.message
+          "error coercing string value to array - " + e.message,
         );
       }
     }
@@ -1166,7 +1152,7 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
       (arr) => arr.length === value,
       errMsg ||
         ((arr) =>
-          `expected array to have length ${value} but got ${arr.length}`)
+          `expected array to have length ${value} but got ${arr.length}`),
     );
   }
   min(value: number, errMsg?: ErrMsg<Infer<T>[]>): ArrayType<T> {
@@ -1174,7 +1160,7 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
       (arr) => arr.length >= value,
       errMsg ||
         ((arr) =>
-          `expected array to have length greater than or equal to ${value} but got ${arr.length}`)
+          `expected array to have length greater than or equal to ${value} but got ${arr.length}`),
     );
   }
   max(value: number, errMsg?: ErrMsg<Infer<T>[]>): ArrayType<T> {
@@ -1182,7 +1168,7 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
       (arr) => arr.length <= value,
       errMsg ||
         ((arr) =>
-          `expected array to have length less than or equal to ${value} but got ${arr.length}`)
+          `expected array to have length less than or equal to ${value} but got ${arr.length}`),
     );
   }
   unique(): ArrayType<T> {
@@ -1192,7 +1178,9 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
         const seenAt = seenMap.get(elem);
         if (seenAt) {
           throw new ValidationError(
-            `expected array to be unique but found same element at indexes ${seenAt[0]} and ${idx}`
+            `expected array to be unique but found same element at indexes ${
+              seenAt[0]
+            } and ${idx}`,
           );
         }
         seenMap.set(elem, [idx]);
@@ -1215,7 +1203,7 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
   }
   withPredicate(
     fn: Predicate<Infer<T>[]>["func"],
-    errMsg?: ErrMsg<Infer<T>[]>
+    errMsg?: ErrMsg<Infer<T>[]>,
   ): ArrayType<T> {
     return new ArrayType(this.schema, {
       default: this.defaultValue,
@@ -1232,23 +1220,21 @@ export class ArrayType<T extends AnyType> extends Type<Infer<T>[]>
 }
 
 type IntersecWrapper<A extends any, B extends any> = A extends AnyType
-  ? B extends AnyType
-    ? IntersectionResult<A, B>
-    : never
+  ? B extends AnyType ? IntersectionResult<A, B>
+  : never
   : never;
 
 type JoinLeft<A extends AnyType[], B extends AnyType[]> = {
-  [idx in keyof A]: idx extends keyof B
-    ? IntersecWrapper<A[idx], B[idx]>
+  [idx in keyof A]: idx extends keyof B ? IntersecWrapper<A[idx], B[idx]>
     : A[idx];
 };
 type JoinRight<A extends AnyType[], B extends AnyType[]> = {
-  [idx in keyof B]: idx extends keyof A
-    ? IntersecWrapper<A[idx], B[idx]>
+  [idx in keyof B]: idx extends keyof A ? IntersecWrapper<A[idx], B[idx]>
     : B[idx];
 };
-type Join<A extends AnyType[], B extends AnyType[]> = JoinLeft<A, B> &
-  JoinRight<A, B>;
+type Join<A extends AnyType[], B extends AnyType[]> =
+  & JoinLeft<A, B>
+  & JoinRight<A, B>;
 
 type InferTuple<T extends AnyType[]> = {
   [key in keyof T]: T[key] extends Type<infer K> ? K : never;
@@ -1270,23 +1256,22 @@ export class TupleType<T extends AnyType[]> extends Type<InferTuple<T>>
     super();
     this.predicates = normalizePredicates(opts?.predicate);
     this.defaultValue = opts?.default;
-    (this as any)[coercionTypeSymbol] =
-      this.defaultValue !== undefined ||
+    (this as any)[coercionTypeSymbol] = this.defaultValue !== undefined ||
       schemas.some((schema) => (schema as any)[coercionTypeSymbol]);
   }
   parse(
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): InferTuple<T> {
     if (!Array.isArray(value)) {
       throw new ValidationError(
-        "expected tuple value to be type array but got " + typeOf(value)
+        "expected tuple value to be type array but got " + typeOf(value),
       );
     }
     if (value.length !== this.schemas.length) {
       throw new ValidationError(
-        `expected tuple length to be ${this.schemas.length} but got ${value.length}`
+        `expected tuple length to be ${this.schemas.length} but got ${value.length}`,
       );
     }
     const convValue: any = (this as any)[coercionTypeSymbol] ? [] : undefined;
@@ -1299,7 +1284,7 @@ export class TupleType<T extends AnyType[]> extends Type<InferTuple<T>>
         }
       } catch (err) {
         throw new ValidationError(
-          `error parsing tuple at index ${i}: ${err.message}`
+          `error parsing tuple at index ${i}: ${err.message}`,
         );
       }
     }
@@ -1309,11 +1294,10 @@ export class TupleType<T extends AnyType[]> extends Type<InferTuple<T>>
     return convValue || (value as any);
   }
   and<K extends AnyType>(
-    schema: K
+    schema: K,
   ): K extends TupleType<any>
-    ? K extends TupleType<infer Arr>
-      ? TupleType<Join<T, Arr>>
-      : never
+    ? K extends TupleType<infer Arr> ? TupleType<Join<T, Arr>>
+    : never
     : IntersectionType<this, K> {
     if (schema instanceof TupleType) {
       const otherSchemaArray = (schema as any).schemas;
@@ -1339,7 +1323,7 @@ export class TupleType<T extends AnyType[]> extends Type<InferTuple<T>>
   }
   withPredicate(
     fn: Predicate<InferTuple<T>>["func"],
-    errMsg?: ErrMsg<InferTuple<T>>
+    errMsg?: ErrMsg<InferTuple<T>>,
   ): TupleType<T> {
     return new TupleType(this.schemas, {
       default: this.defaultValue,
@@ -1362,15 +1346,14 @@ export type UnionOptions<T extends any[]> = {
 
 type UnionIntersection<
   U extends UnionType<any>,
-  T extends AnyType
-> = U extends UnionType<infer Schemas>
-  ? UnionType<
-      {
-        [key in keyof Schemas]: Schemas[key] extends AnyType
-          ? IntersectionResult<Schemas[key], T>
-          : Schemas[key];
-      }
-    >
+  T extends AnyType,
+> = U extends UnionType<infer Schemas> ? UnionType<
+  {
+    [key in keyof Schemas]: Schemas[key] extends AnyType
+      ? IntersectionResult<Schemas[key], T>
+      : Schemas[key];
+  }
+>
   : never;
 
 export class UnionType<T extends AnyType[]> extends Type<InferTupleUnion<T>>
@@ -1383,15 +1366,14 @@ export class UnionType<T extends AnyType[]> extends Type<InferTupleUnion<T>>
     super();
     this.strict = opts?.strict !== false;
     this.defaultValue = opts?.default;
-    (this as any)[coercionTypeSymbol] =
-      opts?.default !== undefined ||
+    (this as any)[coercionTypeSymbol] = opts?.default !== undefined ||
       schemas.some((schema) => (schema as any)[coercionTypeSymbol]);
   }
   parse(
     //@ts-ignore
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): InferTupleUnion<T> {
     const errors = new Set<string>();
     for (const schema of this.schemas) {
@@ -1409,7 +1391,7 @@ export class UnionType<T extends AnyType[]> extends Type<InferTupleUnion<T>>
       throw new ValidationError(messages[0]);
     }
     throw new ValidationError(
-      "No union satisfied:\n  " + messages.join("\n  ")
+      "No union satisfied:\n  " + messages.join("\n  "),
     );
   }
   and<K extends AnyType>(schema: K): UnionIntersection<UnionType<T>, K> {
@@ -1417,7 +1399,7 @@ export class UnionType<T extends AnyType[]> extends Type<InferTupleUnion<T>>
     return new UnionType(schemaIntersections, { strict: this.strict }) as any;
   }
   default(
-    value: InferTupleUnion<T> | (() => InferTupleUnion<T>)
+    value: InferTupleUnion<T> | (() => InferTupleUnion<T>),
   ): UnionType<T> {
     return new UnionType(this.schemas, { strict: this.strict, default: value });
   }
@@ -1425,7 +1407,7 @@ export class UnionType<T extends AnyType[]> extends Type<InferTupleUnion<T>>
 
 export class IntersectionType<
   T extends AnyType,
-  K extends AnyType
+  K extends AnyType,
 > extends Type<Eval<Infer<T> & Infer<K>>> {
   private readonly _parse: (value: unknown, opts?: PathOptions) => any;
 
@@ -1447,7 +1429,7 @@ export class IntersectionType<
         new Set<string>([
           ...(this.left as any)[shapekeysSymbol],
           ...(this.right as any)[shapekeysSymbol],
-        ])
+        ]),
       );
     }
 
@@ -1464,14 +1446,14 @@ export class IntersectionType<
       if (this.left instanceof PartialType) {
         const _schema = new IntersectionType(
           (this.left as any).schema,
-          this.right
+          this.right,
         );
         return (value: unknown) => _schema.parse(value) as any;
       }
       if (this.right instanceof PartialType) {
         const _schema = new IntersectionType(
           this.left,
-          (this.right as any).schema
+          (this.right as any).schema,
         );
         return (value: unknown) => _schema.parse(value) as any;
       }
@@ -1485,18 +1467,18 @@ export class IntersectionType<
 
   parse(
     value: unknown,
-    opts?: PathOptions & ObjectOptions<any>
+    opts?: PathOptions & ObjectOptions<any>,
   ): Eval<Infer<T> & Infer<K>> {
-    const allowUnknown =
-      opts?.allowUnknown || (this as any)[allowUnknownSymbol];
+    const allowUnknown = opts?.allowUnknown ||
+      (this as any)[allowUnknownSymbol];
     if (!allowUnknown && (this as any)[shapekeysSymbol]) {
       const expectedShapeKeys: string[] = (this as any)[shapekeysSymbol];
       const invalidKeys = Object.keys(value as any).filter(
-        (key: string) => !expectedShapeKeys.includes(key)
+        (key: string) => !expectedShapeKeys.includes(key),
       );
       if (invalidKeys.length > 0) {
         throw new ValidationError(
-          "unexpected keys on object " + JSON.stringify(invalidKeys)
+          "unexpected keys on object " + JSON.stringify(invalidKeys),
         );
       }
     }
@@ -1516,7 +1498,7 @@ export class EnumType<T> extends Type<ValueOf<T>>
   private readonly defaultValue?: ValueOf<T> | (() => ValueOf<T>);
   constructor(
     private readonly enumeration: T,
-    defaultValue?: ValueOf<T> | (() => ValueOf<T>)
+    defaultValue?: ValueOf<T> | (() => ValueOf<T>),
   ) {
     super();
     this.values = Object.values(enumeration);
@@ -1527,11 +1509,11 @@ export class EnumType<T> extends Type<ValueOf<T>>
     //@ts-ignore
     value: unknown = typeof this.defaultValue === "function"
       ? this.defaultValue()
-      : this.defaultValue
+      : this.defaultValue,
   ): ValueOf<T> {
     if (!this.values.includes(value)) {
       throw new ValidationError(
-        `error ${JSON.stringify(value)} not part of enum values`
+        `error ${JSON.stringify(value)} not part of enum values`,
       );
     }
     return value as ValueOf<T>;
@@ -1559,20 +1541,20 @@ function toPartialSchema(schema: AnyType, opts?: PartialOpts): AnyType {
   if (schema instanceof IntersectionType) {
     return new IntersectionType(
       toPartialSchema((schema as any).left, opts),
-      toPartialSchema((schema as any).right, opts)
+      toPartialSchema((schema as any).right, opts),
     );
   }
   if (schema instanceof UnionType) {
     return new UnionType(
       (schema as any).schemas.map((schema: AnyType) =>
         toPartialSchema(schema, opts)
-      )
+      ),
     );
   }
   if (schema instanceof ArrayType) {
     if (opts?.deep) {
       return new ArrayType(
-        toPartialSchema((schema as any).schema, opts).optional()
+        toPartialSchema((schema as any).schema, opts).optional(),
       );
     }
     return new ArrayType((schema as any).schema.optional());
@@ -1592,9 +1574,8 @@ export class PartialType<T extends AnyType, K extends PartialOpts> extends Type<
     ];
   }
   parse(
-    value: unknown
-  ): K extends { deep: true }
-    ? Eval<DeepPartial<Infer<T>>>
+    value: unknown,
+  ): K extends { deep: true } ? Eval<DeepPartial<Infer<T>>>
     : Partial<Infer<T>> {
     return this.schema.parse(value);
   }

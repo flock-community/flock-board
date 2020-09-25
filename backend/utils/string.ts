@@ -7,10 +7,11 @@ export function removePrefix(string: string, prefix: string) {
 export function substringBefore(
   string: string,
   delimiter: string,
-  missingDelimiterValue?: string
+  missingDelimiterValue?: string,
 ) {
-  missingDelimiterValue =
-    missingDelimiterValue != null ? missingDelimiterValue : string;
+  missingDelimiterValue = missingDelimiterValue != null
+    ? missingDelimiterValue
+    : string;
   const index = string.indexOf(delimiter);
   return index === -1 ? missingDelimiterValue : string.substring(0, index);
 }
@@ -18,7 +19,7 @@ export function substringBefore(
 export function substringAfter(
   string: string,
   delimiter: string,
-  missingDelimiterValue: string = string
+  missingDelimiterValue: string = string,
 ) {
   const index = string.indexOf(delimiter);
   return index === -1
@@ -29,7 +30,7 @@ export function substringAfter(
 export function split(
   string: string,
   separator: string | RegExp,
-  limit?: number
+  limit?: number,
 ) {
   return string.split(separator, limit);
 }

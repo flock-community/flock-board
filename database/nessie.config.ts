@@ -1,6 +1,6 @@
 import { ClientPostgreSQL } from "https://deno.land/x/nessie/mod.ts";
 import { ClientSQLite } from "https://deno.land/x/nessie/mod.ts";
-import {db} from "./config.ts"
+import { db } from "./config.ts";
 
 const profiles = Deno.env.get("PROFILE")?.split(",") ?? [];
 const dev = profiles.includes("development");
@@ -11,14 +11,15 @@ const clientOptions = {
   seedFolder: Deno.cwd() + "/database/db/migrations",
 };
 
-const clientDev = () =>  new ClientSQLite(clientOptions, "./sqlite.db");
+const clientDev = () => new ClientSQLite(clientOptions, "./sqlite.db");
 
 /** Select one of the supported clients */
-const clientPro = () => new ClientPostgreSQL(clientOptions, {
-  ...db,
-  hostname: db.host,
-  user: db.username
-});
+const clientPro = () =>
+  new ClientPostgreSQL(clientOptions, {
+    ...db,
+    hostname: db.host,
+    user: db.username,
+  });
 
 /** This is the final config object */
 const config = {

@@ -9,7 +9,7 @@ export class Project extends Model {
     name: DataTypes.STRING,
     description: DataTypes.STRING,
     state: DataTypes.enum(["OPEN", "IN_PROGRESS", "DONE"]),
-    color: DataTypes.STRING
+    color: DataTypes.STRING,
   };
 
   static defaults = {};

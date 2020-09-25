@@ -1,7 +1,7 @@
 import {
   StaticServer,
   StaticServerDevelopment,
-  StaticServerProduction
+  StaticServerProduction,
 } from "./services/static-server.ts";
 import type { CrudService } from "./services/crud-service.ts";
 import type { Project } from "../frontend/target/model/board.ts";
@@ -28,8 +28,8 @@ export function createApp() {
 
     services: {
       projects: dev
-          ? new MemoryCrudService<Project>("project", [])
-          : new ProjectService()
-    }
+        ? new MemoryCrudService<Project>("project", [])
+        : new ProjectService(),
+    },
   };
 }

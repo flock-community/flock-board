@@ -1,7 +1,7 @@
 import { Database } from "https://deno.land/x/denodb/mod.ts";
 import { Project } from "./model/Project.ts";
 
-import {db} from "./config.ts"
+import { db } from "./config.ts";
 
 const profiles = Deno.env.get("PROFILE")?.split(",") ?? [];
 const dev = profiles.includes("development");
@@ -20,8 +20,7 @@ const dbDev = () =>
     filepath: "../sqlite.db",
   });
 
-const dbPro = () =>
-  new Database("postgres", db);
+const dbPro = () => new Database("postgres", db);
 
 (dev ? dbDev() : dbPro()).link([Project]);
 

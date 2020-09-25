@@ -11,13 +11,13 @@ export interface Request {
 }
 
 export async function internalizeRequest(
-  serverRequest: ServerRequest
+  serverRequest: ServerRequest,
 ): Promise<Request> {
   const searchIndex = serverRequest.url.indexOf("?");
   let body;
   if (serverRequest.headers.get("content-type") === "application/json") {
     body = JSON.parse(
-      new TextDecoder().decode(await Deno.readAll(serverRequest.body))
+      new TextDecoder().decode(await Deno.readAll(serverRequest.body)),
     );
   }
   return {
@@ -25,11 +25,8 @@ export async function internalizeRequest(
     method: serverRequest.method.toUpperCase(),
     body: body,
     headers: Object.fromEntries(serverRequest.headers),
-    search:
-      searchIndex === -1
-        ? {}
-        : Object.fromEntries(
-            new URLSearchParams(serverRequest.url.substring(searchIndex))
-          ),
+    search: searchIndex === -1 ? {} : Object.fromEntries(
+      new URLSearchParams(serverRequest.url.substring(searchIndex)),
+    ),
   };
 }

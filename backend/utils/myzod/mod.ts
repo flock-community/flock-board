@@ -48,17 +48,17 @@ export const literal = <T extends Literal>(literal: T) =>
   new LiteralType(literal);
 export const object = <T extends ObjectShape>(
   shape: T,
-  opts?: ObjectOptions<T>
+  opts?: ObjectOptions<T>,
 ) => new ObjectType(shape, opts);
 export const array = <T extends AnyType>(schema: T, opts?: ArrayOptions<T>) =>
   new ArrayType(schema, opts);
 export const union = <T extends AnyType[]>(
   schemas: T,
-  opts?: UnionOptions<T>
+  opts?: UnionOptions<T>,
 ) => new UnionType(schemas, opts);
 export const intersection = <T extends AnyType, K extends AnyType>(
   l: T,
-  r: K
+  r: K,
 ): IntersectionResult<T, K> => l.and(r);
 
 type LiteralWrapper<T extends any> = T extends Literal ? LiteralType<T> : never;
@@ -72,7 +72,7 @@ export const literals = <T extends Literal[]>(
 export const record = <T extends AnyType>(schema: T) =>
   new ObjectType({ [keySignature]: schema });
 export const dictionary = <T extends AnyType>(
-  schema: T
+  schema: T,
 ): ObjectType<{
   // @ts-ignore
   [keySignature]: T extends OptionalType<any> ? T : OptionalType<T>;
@@ -90,17 +90,16 @@ export const lazy = <T extends () => AnyType>(fn: T) => new LazyType(fn);
 
 export function partial<T extends ObjectType<any>, K extends PartialOpts>(
   schema: T,
-  opts?: K
-): T extends ObjectType<infer Shape>
-  ? ObjectType<
-      Eval<
-        K extends { deep: true } ? DeepPartialShape<Shape> : PartialShape<Shape>
-      >
-    >
+  opts?: K,
+): T extends ObjectType<infer Shape> ? ObjectType<
+  Eval<
+    K extends { deep: true } ? DeepPartialShape<Shape> : PartialShape<Shape>
+  >
+>
   : never;
 export function partial<T extends AnyType, K extends PartialOpts>(
   schema: T,
-  opts?: K
+  opts?: K,
 ): PartialType<T, K>;
 export function partial(schema: any, opts: any): any {
   if (schema instanceof ObjectType) {
@@ -112,34 +111,34 @@ export function partial(schema: any, opts: any): any {
 export function pick<
   T extends ObjectType<any>,
   K extends T extends ObjectType<infer Shape>
-    ? Shape extends { [keySignature]: AnyType }
-      ? string
-      : StringTypes<keyof Shape>
-    : never
+    ? Shape extends { [keySignature]: AnyType } ? string
+    : StringTypes<keyof Shape>
+    : never,
 >(
   schema: T,
-  keys: K[]
-): T extends ObjectType<infer Shape>
-  ? ObjectType<
-      Eval<
-        Pick<Shape, Extract<StringTypes<keyof Shape>, ToUnion<typeof keys>>> &
-          (Shape extends { [keySignature]: AnyType }
-            ? Shape extends { [keySignature]: infer KeySig }
-              ? { [key in Exclude<ToUnion<typeof keys>, keyof Shape>]: KeySig }
-              : {}
-            : {})
-      >
-    >
+  keys: K[],
+): T extends ObjectType<infer Shape> ? ObjectType<
+  Eval<
+    & Pick<Shape, Extract<StringTypes<keyof Shape>, ToUnion<typeof keys>>>
+    & (Shape extends { [keySignature]: AnyType }
+      ? Shape extends { [keySignature]: infer KeySig } ? {
+        [key in Exclude<ToUnion<typeof keys>, keyof Shape>]: KeySig;
+      }
+      : {}
+      : {})
+  >
+>
   : never {
   return schema.pick(keys) as any;
 }
 
 export function omit<
   T extends ObjectType<any>,
-  K extends T extends ObjectType<infer Shape> ? StringTypes<keyof Shape> : never
+  K extends T extends ObjectType<infer Shape> ? StringTypes<keyof Shape>
+    : never,
 >(
   schema: T,
-  keys: K[]
+  keys: K[],
 ): T extends ObjectType<infer Shape>
   ? ObjectType<Eval<Omit<Shape, ToUnion<typeof keys>>>>
   : never {

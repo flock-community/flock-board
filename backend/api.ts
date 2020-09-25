@@ -19,7 +19,7 @@ export async function api(route: Routes): Promise<Response> {
     case "UPDATE_PROJECT":
       return {
         body: JSON.stringify(
-          await app.services.projects.update(route.body.id, route.body)
+          await app.services.projects.update(route.body.id, route.body),
         ),
       };
     case "DELETE_PROJECT":
