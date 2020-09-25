@@ -138,6 +138,7 @@ export function ProjectForm(props: FormProps) {
         <Grid container spacing={2}>
           <Grid container item justify="center" xs={12}>
             <TextField
+              required
               className={classes.input}
               name="name"
               inputRef={register}
@@ -162,6 +163,7 @@ export function ProjectForm(props: FormProps) {
                   autoComplete
                   multiple
                   filterSelectedOptions
+                  disableCloseOnSelect
                   className={classes.input}
                   options={options}
                   renderOption={renderOption}
