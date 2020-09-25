@@ -37,7 +37,7 @@ import {
   StringOptions,
 } from "./types.ts";
 
-export { ValidationError, Type, Infer, keySignature } from "./types.ts";
+export type { ValidationError, Type, Infer, keySignature } from "./types.ts";
 
 export const string = (opts?: StringOptions) => new StringType(opts);
 export const boolean = () => new BooleanType();

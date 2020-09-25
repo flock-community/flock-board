@@ -1,6 +1,6 @@
 import { removePrefix } from "./string.ts";
 
-import { ServerRequest } from "https://deno.land/std/http/server.ts";
+import type { ServerRequest } from "https://deno.land/std/http/server.ts";
 
 export interface Request {
   path: string[];

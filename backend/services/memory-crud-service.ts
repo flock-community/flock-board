@@ -1,4 +1,4 @@
-import { Entity } from '../model/entity.ts';
+import type { Entity } from '../model/entity.ts';
 import { AbstractCrudService } from './crud-service.ts';
 
 export class MemoryCrudService<E extends Entity> extends AbstractCrudService<E> {

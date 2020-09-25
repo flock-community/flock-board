@@ -1,4 +1,4 @@
-import { Entity } from '../model/entity.ts';
+import type { Entity } from '../model/entity.ts';
 
 export interface CrudService<E extends Entity> {
   getAll(): Promise<E[]>;

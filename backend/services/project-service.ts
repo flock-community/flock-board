@@ -1,5 +1,5 @@
-import { CrudService } from "./crud-service.ts";
-import { Project } from "../../frontend/target/model/board.ts";
+import type { CrudService } from "./crud-service.ts";
+import type { Project } from "../../frontend/target/model/board.ts";
 import { Project as ProjectDb } from "../../database/mod.ts";
 
 export class ProjectService implements CrudService<Project> {

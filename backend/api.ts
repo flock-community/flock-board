@@ -1,6 +1,6 @@
 import { app } from "./app.ts";
-import { Routes } from "./model/routes.ts";
-import { Response } from "https://deno.land/std/http/server.ts";
+import type { Routes } from "./model/routes.ts";
+import type { Response } from "https://deno.land/std/http/server.ts";
 
 export async function api(route: Routes): Promise<Response> {
   switch (route.name) {

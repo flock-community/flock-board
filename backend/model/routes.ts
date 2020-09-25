@@ -1,6 +1,6 @@
 import * as z from "../utils/myzod/mod.ts";
 import { Infer, literal, string, tuple } from "../utils/myzod/mod.ts";
-import { ObjectShape } from "../utils/myzod/types.ts";
+import type { ObjectShape } from "../utils/myzod/types.ts";
 import { projectSchema } from "./project.ts";
 
 export const routesSchema = z.union([

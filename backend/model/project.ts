@@ -1,6 +1,6 @@
 import * as z from "../utils/myzod/mod.ts";
 import { literals } from "../utils/myzod/mod.ts";
-import { Project } from "../../frontend/target/model/board.ts";
+import type { Project } from "../../frontend/target/model/board.ts";
 import { object } from "./routes.ts";
 
 export const projectSchema: z.Type<Project> = object({

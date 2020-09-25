@@ -3,9 +3,10 @@ import {
   StaticServerDevelopment,
   StaticServerProduction
 } from "./services/static-server.ts";
-import { CrudService } from "./services/crud-service.ts";
-import { Project } from "../frontend/target/model/board.ts";
+import type { CrudService } from "./services/crud-service.ts";
+import type { Project } from "../frontend/target/model/board.ts";
 import { MemoryCrudService } from "./services/memory-crud-service.ts";
+import { ProjectService } from "./services/project-service.ts";
 
 interface App {
   staticServer: StaticServer;
@@ -26,7 +27,9 @@ export function createApp() {
       : new StaticServerProduction(),
 
     services: {
-      projects: new MemoryCrudService<Project>("project", [])
+      projects: dev
+          ? new MemoryCrudService<Project>("project", [])
+          : new ProjectService()
     }
   };
 }
