@@ -11,7 +11,12 @@ import {
   MenuItem,
   TextField,
   Grid,
+  Checkbox,
 } from "@material-ui/core";
+import Autocomplete, {
+  AutocompleteRenderInputParams,
+  AutocompleteRenderOptionState,
+} from "@material-ui/lab/Autocomplete";
 import { useHistory, useParams } from "react-router-dom";
 import { ProjectState, Project } from "../../../target/model/board";
 import { ulid } from "ulid";
@@ -32,6 +37,7 @@ interface ProjectData {
   name: string;
   description: string;
   state: ProjectState;
+  people: string[];
 }
 
 interface FormProps {
@@ -46,6 +52,23 @@ const items = [
   purple[500],
   deepPurple[500],
   indigo[500],
+];
+
+const options = [
+  "Anouk",
+  "Florian",
+  "Goffert",
+  "Jacky",
+  "Jerre",
+  "Julius",
+  "Kasper",
+  "Lucas",
+  "Maureen",
+  "Nils",
+  "Reinier",
+  "Tobias",
+  "Vincent",
+  "Willem",
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -67,8 +90,29 @@ function getNewProject(): Project {
     createdAt: new Date(),
     updatedAt: new Date(),
     color: items[Math.floor(Math.random() * items.length)],
+    people: [],
   };
 }
+
+const getOptionLabel = (option: string) => {
+  return option;
+};
+
+const renderOption = (option: string, state: AutocompleteRenderOptionState) => (
+  <>
+    <Checkbox
+      // icon={icon}
+      // checkedIcon={checkedIcon}
+      style={{ marginRight: 8 }}
+      checked={state.selected}
+    />
+    {getOptionLabel ? getOptionLabel(option) : ""}
+  </>
+);
+
+const renderInput = (params: AutocompleteRenderInputParams) => (
+  <TextField {...params} variant="outlined" label={"people"} />
+);
 
 export function ProjectForm(props: FormProps) {
   const { register, handleSubmit, control } = useForm<ProjectData>();
@@ -111,13 +155,40 @@ export function ProjectForm(props: FormProps) {
               label="description"
             />
           </Grid>
+          <Grid container item justify="center" xs={12}>
+            <Controller
+              render={(_props) => (
+                <Autocomplete
+                  autoComplete
+                  multiple
+                  filterSelectedOptions
+                  className={classes.input}
+                  options={options}
+                  renderOption={renderOption}
+                  renderInput={renderInput}
+                  getOptionLabel={getOptionLabel}
+                  getOptionSelected={(option, value) => option === value}
+                  onChange={(_e, data) => {
+                    project.people = data;
+                    setProject(project);
+                  }}
+                />
+              )}
+              name="people"
+              // rules={rules}
+              control={control}
+              defaultValue={project.people}
+            />
+          </Grid>
 
           <Grid container item justify="center" xs={12}>
             <Controller
               as={
                 <TextField select label="Select" className={classes.input}>
                   {projectStates.map((state) => (
-                    <MenuItem value={state}>{state.replace("_", " ")}</MenuItem>
+                    <MenuItem key={state} value={state}>
+                      {state.replace("_", " ")}
+                    </MenuItem>
                   ))}
                 </TextField>
               }
@@ -140,6 +211,7 @@ export function ProjectForm(props: FormProps) {
   function onSubmit(data: ProjectData) {
     if (project == null) return;
 
+    data.people = project.people;
     let responsePromise;
     if (id) {
       responsePromise = updateProject({

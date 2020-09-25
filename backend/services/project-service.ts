@@ -4,7 +4,7 @@ import { Project as ProjectDb } from "../../database/mod.ts";
 
 export class ProjectService implements CrudService<Project> {
   async create(project: Project): Promise<Project> {
-    return ProjectDb.create({ ...project });
+    return ProjectDb.create({ ...project, people: project.people.join(",") });
   }
 
   delete(id: Project["id"]): Promise<void> {
@@ -12,26 +12,34 @@ export class ProjectService implements CrudService<Project> {
   }
 
   get(id: Project["id"]): Promise<Project> {
-    return ProjectDb.find(id);
+    return ProjectDb.find(id).then(project => ({
+      ...project,
+      people: project.people.split(",")
+    }));
   }
 
   getAll(): Promise<Project[]> {
-    return ProjectDb.all();
+    return ProjectDb.all().map(project => ({
+      ...project,
+      people: project.people.split(",")
+    }));
   }
 
   async update(
     id: Project["id"],
-    mutation: Partial<Project>,
+    mutation: Partial<Project>
   ): Promise<Project> {
     const project = await ProjectDb.find(id);
+    const people = mutation.people ? mutation.people.join(",") : project.people;
     await ProjectDb.deleteById(project.id);
-    return await ProjectDb.create({
+    return ProjectDb.update(id, {
       ...project,
       ...mutation,
+      people
     });
   }
 
   async updateAll(entities: Project[]): Promise<void> {
-    await Promise.all(entities.map((it) => this.update(it.id, it)));
+    await Promise.all(entities.map(it => this.update(it.id, it)));
   }
 }

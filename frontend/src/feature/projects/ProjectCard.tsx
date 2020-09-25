@@ -8,6 +8,7 @@ import {
   IconButton,
   CardHeader,
   Avatar,
+  Box,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { deleteProject } from "../../clients/project-client";
@@ -59,6 +60,9 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
         subheader={dateFormat.format(project.createdAt)}
       />
       <CardContent>
+        <Box fontStyle="italic" mb={1}>
+          {project.people.join(", ")}
+        </Box>
         <Typography variant="body2" component="p">
           {project.description}
         </Typography>
