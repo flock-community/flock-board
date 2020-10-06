@@ -1,9 +1,12 @@
+import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
 import { serve } from "https://deno.land/std/http/server.ts";
 import { extname } from "https://deno.land/std/path/mod.ts";
 import { app, createApp } from "./app.ts";
 import { internalizeRequest } from "./utils/request.ts";
 import { routesSchema } from "./model/routes.ts";
 import { api } from "./api.ts";
+import {openApi, router} from './model/router.ts'
+
 
 createApp();
 
@@ -12,7 +15,17 @@ console.log("http://localhost:8000/");
 
 for await (const request of server) {
   try {
-    if (!request.url.startsWith("/api")) {
+    if (request.url === "/openapi") {
+      request.respond({
+        body: JSON.stringify(openApi),
+        status: 200,
+      });
+    } else if (request.url === "/swagger") {
+      request.respond({
+        body: await Deno.open("./swagger/index.html"),
+        status: 200,
+      });
+    } else if (!request.url.startsWith("/api")) {
       const url = extname(request.url).includes(".")
         ? request.url
         : "/index.html";
