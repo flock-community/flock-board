@@ -39,7 +39,7 @@ const options = [
   "Kasper",
   "Lukas",
   "Maureen",
-  "Nils",
+  "Niels",
   "Reinier",
   "Tobias",
   "Vincent",
