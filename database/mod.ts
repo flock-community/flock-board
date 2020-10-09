@@ -1,4 +1,4 @@
-import { Database } from "https://deno.land/x/denodb/mod.ts";
+import { Database } from "./deps.ts";
 import { Project } from "./model/Project.ts";
 
 import { db } from "./config.ts";
