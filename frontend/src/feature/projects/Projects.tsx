@@ -7,7 +7,6 @@ import {
   Route,
   useRouteMatch,
 } from "react-router-dom";
-import { ProjectForm } from "./ProjectForm";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { ProjectCard } from "./ProjectCard";
 import { makeStyles } from "@material-ui/core/styles";
@@ -15,6 +14,9 @@ import { clientResponseHandler } from "../../util/client.hooks";
 import { toast } from "react-toastify";
 import { projectStates } from "../../util/typeValues.hooks";
 import AddIcon from "@material-ui/icons/Add";
+import { ProjectEdit } from "./ProjectEdit";
+import { ProjectNew } from "./ProjectNew";
+import { appendUrl } from "../../util/url.helper";
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -47,7 +49,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Projects() {
-  const [state, setState] = useState<Project[][]>(projectStates.map((s) => []));
+  const [state, setState] = useState<Project[][]>(
+    projectStates.map((_s) => [])
+  );
   const { path, url } = useRouteMatch();
   const [trigger, setTrigger] = useState(true);
 
@@ -70,7 +74,7 @@ export function Projects() {
             variant="extended"
             className={classes.fab}
             color="primary"
-            href={`${url}/new`}
+            href={appendUrl(url, "new")}
           >
             <AddIcon />
             New project
@@ -129,10 +133,10 @@ export function Projects() {
           </DragDropContext>
         </Route>
         <Route path={`${path}/new`}>
-          <ProjectForm onSubmit={() => setTrigger(!trigger)} />
+          <ProjectNew onSubmit={() => setTrigger(!trigger)} />
         </Route>
         <Route path={`${path}/edit/:id`}>
-          <ProjectForm onSubmit={() => setTrigger(!trigger)} />
+          <ProjectEdit onSubmit={() => setTrigger(!trigger)} />
         </Route>
       </Switch>
     </>

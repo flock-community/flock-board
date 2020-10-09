@@ -6,6 +6,7 @@ type Project {
   updatedAt: Date!
   state: ProjectState!
   color: string!
+  people: [string]!
 }
 
 enum ProjectState {
