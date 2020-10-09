@@ -1,4 +1,4 @@
-import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
+import * as z from "../../../zod-router/mod.ts";
 import {Error, Project, Projects} from "./domain.ts";
 
 const errorResponse = z.response({
@@ -99,7 +99,7 @@ export const router = z.router([
                 description: "Project updated",
                 headers: {},
                 type: "application/json",
-                content: z.reference("Project", Project),
+                content: undefined,
             }),
             errorResponse,
         ],
@@ -125,15 +125,16 @@ export const router = z.router([
                 description: "Project deleted",
                 headers: {},
                 type: "application/json",
-                content: z.reference("Project", Project),
+                content: undefined,
             }),
             errorResponse,
         ],
     }),
 ]);
 
-export type RouterOutput = z.output<typeof router>
-export type RouterInput = z.input<typeof router>
-
 const info = {version: "1.0.0", title: "Flock. board"}
 export const openApi = z.openApi(router, info)
+
+
+
+
