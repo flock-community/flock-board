@@ -16,6 +16,7 @@ import { Project } from "../../../target/model/board";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { clientResponseHandler } from "../../util/client.hooks";
 import { dateFormat } from "../../util/date.format";
+import { appendUrl } from "../../util/url.helper";
 
 interface ProjectCardProps {
   project: Project;
@@ -79,7 +80,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
   }
 
   function handleEditProject() {
-    history.push(`${url}/edit/${project.id}`);
+    history.push(appendUrl(url, `edit/${project.id}`));
     handleClose();
   }
 
