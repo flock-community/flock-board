@@ -5,8 +5,7 @@ import { app, createApp } from "./app.ts";
 import { internalizeRequest } from "./utils/request.ts";
 import { routesSchema } from "./model/routes.ts";
 import { api } from "./api.ts";
-import {openApi, router} from './model/router.ts'
-
+import { openApi, router } from "./model/router.ts";
 
 createApp();
 
@@ -37,7 +36,8 @@ for await (const request of server) {
       });
     } else {
       const route = routesSchema.parse(await internalizeRequest(request));
-      request.respond(await api(route));
+      const func = api['GET_PROJECT']
+      request.respond(await func({method:"GET", path:['api', 'projects', 'asdf']}));
     }
   } catch (e) {
     request.respond({

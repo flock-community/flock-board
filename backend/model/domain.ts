@@ -11,7 +11,9 @@ export const Project = z.object({
   description: z.string(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  state: z.union([z.literal("OPEN"), z.literal("IN_PROGRESS"), z.literal("DONE")]),
+  state: z.union(
+    [z.literal("OPEN"), z.literal("IN_PROGRESS"), z.literal("DONE")],
+  ),
   color: z.string(),
 });
 

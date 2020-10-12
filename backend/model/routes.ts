@@ -6,7 +6,7 @@ import { projectSchema } from "./project.ts";
 export const routesSchema = z.union([
   object({
     name: literal("GET_PROJECTS").default(),
-    path: tuple([literal("api"), literal("project")]),
+    path: tuple([literal("api"), literal("projects")]),
     method: literal("GET"),
     headers: object({
       accept: literal("application/json"),
@@ -14,7 +14,7 @@ export const routesSchema = z.union([
   }),
   object({
     name: literal("GET_PROJECT").default(),
-    path: z.tuple([literal("api"), literal("project"), string()]),
+    path: z.tuple([literal("api"), literal("projects"), string()]),
     method: literal("GET"),
     headers: object({
       accept: literal("application/json"),
@@ -22,7 +22,7 @@ export const routesSchema = z.union([
   }),
   object({
     name: literal("CREATE_PROJECT").default(),
-    path: tuple([literal("api"), literal("project")]),
+    path: tuple([literal("api"), literal("projects")]),
     method: literal("POST"),
     body: projectSchema,
     headers: object({
@@ -32,7 +32,7 @@ export const routesSchema = z.union([
   }),
   object({
     name: literal("UPDATE_PROJECT").default(),
-    path: tuple([literal("api"), literal("project")]),
+    path: tuple([literal("api"), literal("projects")]),
     method: literal("PUT"),
     body: projectSchema,
     headers: object({
@@ -42,7 +42,7 @@ export const routesSchema = z.union([
   }),
   object({
     name: literal("DELETE_PROJECT").default(),
-    path: tuple([literal("api"), literal("project")]),
+    path: tuple([literal("api"), literal("projects")]),
     body: object({
       id: string(),
     }),
