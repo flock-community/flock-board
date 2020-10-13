@@ -9,8 +9,8 @@ export interface Request {
   method: Methods;
   headers: Record<string, unknown>;
   query: Record<string, string>;
-  type?: string,
-  body?: unknown
+  type?: string;
+  body?: unknown;
 }
 
 export async function internalizeRequest(
@@ -32,17 +32,23 @@ export async function internalizeRequest(
     ),
     type: serverRequest.headers.get("content-type") ?? undefined,
     body: body,
-
   };
 }
 
-export function matchRequest<S extends z.HttpSchema>(schema:S, request:Request):z.ApiRouteNames<S>{
-  if("options" in schema._def){
-    const route = schema._def.options.find(it =>  (('items' in it.shape.path._def) ? it.shape.path.check(request.path): false) && it.shape.method.check(request.method))
-    if(route && "transformer" in route.shape.name._def) {
+export function matchRequest<S extends z.HttpSchema>(
+  schema: S,
+  request: Request,
+): z.ApiRouteNames<S> {
+  if ("options" in schema._def) {
+    const route = schema._def.options.find((it) =>
+      (("items" in it.shape.path._def)
+        ? it.shape.path.check(request.path)
+        : false) && it.shape.method.check(request.method)
+    );
+    if (route && "transformer" in route.shape.name._def) {
       // @ts-ignore
-      return route.shape.name._def.output._def.value
+      return route.shape.name._def.output._def.value;
     }
   }
-  throw new Error("Rout not found")
+  throw new Error("Rout not found");
 }

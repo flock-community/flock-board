@@ -11,5 +11,5 @@ export const projectSchema: z.Type<Project> = object({
   updatedAt: z.date(),
   state: literals("OPEN", "IN_PROGRESS", "DONE"),
   color: z.string(),
-  people: z.array(z.string())
+  people: z.array(z.string()),
 });

@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std/http/server.ts";
 import { extname } from "https://deno.land/std/path/mod.ts";
 import { app, createApp } from "./app.ts";
-import {internalizeRequest, matchRequest} from "./utils/request.ts";
+import { internalizeRequest, matchRequest } from "./utils/request.ts";
 import { api } from "./api.ts";
 import { openApi, router } from "./model/router.ts";
 
@@ -23,18 +23,24 @@ for await (const request of server) {
         status: 200,
       });
     } else if (request.url.startsWith("/api")) {
-      const req = await internalizeRequest(request)
-      const route = matchRequest(router, req)
-      console.log("route name", route)
-      const func = api[route]
+      const req = await internalizeRequest(request);
+      const route = matchRequest(router, req);
+      console.log("route name", route);
+      const func = api[route];
       // @ts-ignore
-      const res = await func(req)
-      request.respond({status: res.status, body:JSON.stringify(res.content), headers:new Headers(res.headers)});
+      const res = await func(req);
+      request.respond(
+        {
+          status: res.status,
+          body: JSON.stringify(res.content),
+          headers: new Headers(res.headers),
+        },
+      );
     } else {
-      console.log(request.url)
+      console.log(request.url);
       const url = extname(request.url).includes(".")
-          ? request.url
-          : "/index.html";
+        ? request.url
+        : "/index.html";
       request.respond({
         body: await app.staticServer.getFile(url),
         headers: new Headers({

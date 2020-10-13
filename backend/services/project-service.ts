@@ -12,25 +12,25 @@ export class ProjectService implements CrudService<Project> {
   }
 
   get(id: Project["id"]): Promise<Project> {
-    return ProjectDb.find(id).then(project => ({
+    return ProjectDb.find(id).then((project) => ({
       ...project,
-      people: project.people.split(",")
+      people: project.people.split(","),
     }));
   }
 
   getAll(): Promise<Project[]> {
-    console.log("---")
-    return ProjectDb.all().then(px =>
+    console.log("---");
+    return ProjectDb.all().then((px) =>
       px.map((project: any) => ({
         ...project,
-        people: project.people.split(",")
+        people: project.people.split(","),
       }))
     );
   }
 
   async update(
     id: Project["id"],
-    mutation: Partial<Project>
+    mutation: Partial<Project>,
   ): Promise<Project> {
     const project = await ProjectDb.find(id);
     const people = mutation.people ? mutation.people.join(",") : project.people;
@@ -38,11 +38,11 @@ export class ProjectService implements CrudService<Project> {
     return ProjectDb.update(id, {
       ...project,
       ...mutation,
-      people
+      people,
     });
   }
 
   async updateAll(entities: Project[]): Promise<void> {
-    await Promise.all(entities.map(it => this.update(it.id, it)));
+    await Promise.all(entities.map((it) => this.update(it.id, it)));
   }
 }
