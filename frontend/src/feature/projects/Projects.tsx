@@ -161,7 +161,7 @@ export function Projects() {
     toLane.splice(destination.index, 0, project);
 
     clientResponseHandler({
-      responsePromise: updateProject(project),
+      responsePromise: updateProject(project.id, project),
       onError: () => {
         setState(oldState);
         toast.error("Failed to update project");

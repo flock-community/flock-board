@@ -1,4 +1,5 @@
 import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
+import {ProjectState} from "../../frontend/target/model/board.ts";
 
 export const Error = z.object({
   code: z.integer(),
@@ -15,6 +16,7 @@ export const Project = z.object({
     [z.literal("OPEN"), z.literal("IN_PROGRESS"), z.literal("DONE")],
   ),
   color: z.string(),
+  people: z.array(z.string())
 });
 
 export const Projects = z.array(z.reference("Project", Project));

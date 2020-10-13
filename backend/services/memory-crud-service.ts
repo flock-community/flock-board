@@ -3,7 +3,7 @@ import { AbstractCrudService } from "./crud-service.ts";
 
 export class MemoryCrudService<E extends Entity>
   extends AbstractCrudService<E> {
-  private entities: E[];
+  private entities: E[] = [];
 
   constructor(protected name: string, entities: E[] = []) {
     super();

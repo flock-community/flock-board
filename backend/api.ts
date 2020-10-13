@@ -1,54 +1,11 @@
-import * as z from "../../zod-router/mod.ts";
+import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
 import { router } from "./model/router.ts";
+import { app } from "./app.ts";
 
 export const api: z.Api<typeof router> = {
-  "GET_PROJECT": ({path}) =>{
-      const id = path[2]
-      return Promise.resolve({
-          status: 200,
-          content: {
-              id: "1",
-              name: "Project 1",
-              description: "This is project 1",
-              createdAt: new Date(),
-              updatedAt: new Date(),
-              state: "OPEN",
-              color: "Red",
-          },
-      })
-  },
-  "GET_PROJECTS": () =>
-    Promise.resolve({
-      status: 200,
-      content: [{
-        id: "1",
-        name: "Project 1",
-        description: "This is project 1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        state: "OPEN",
-        color: "Red",
-      }],
-    }),
-  "CREATE_PROJECT": () =>
-    Promise.resolve({
-      status: 201,
-      content: {
-        id: "1",
-        name: "Project 1",
-        description: "This is project 1",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        state: "OPEN",
-        color: "Red",
-      },
-    }),
-  "UPDATE_PROJECT": () =>
-    Promise.resolve({
-      status: 201,
-    }),
-  "DELETE_PROJECT": () =>
-    Promise.resolve({
-      status: 201,
-    }),
+  "GET_PROJECT": ({path}) => app.services.projects.get(path[2]).then(it => ({status: 200, content:it})),
+  "GET_PROJECTS": () => app.services.projects.getAll().then(it => ({status: 200, content:it})),
+  "CREATE_PROJECT": ({body}) => app.services.projects.create(body).then(_ => ({status: 201})),
+  "UPDATE_PROJECT": ({path, body}) => app.services.projects.update(path[2], body).then(_ => ({status: 201})),
+  "DELETE_PROJECT": ({path}) => app.services.projects.delete(path[2]).then(_ => ({status: 201})),
 };

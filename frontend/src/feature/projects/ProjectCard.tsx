@@ -73,7 +73,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
 
   async function handleDeleteProject() {
     clientResponseHandler({
-      responsePromise: deleteProject(project),
+      responsePromise: deleteProject(project.id),
       onSuccess: onDelete,
     });
     handleClose();

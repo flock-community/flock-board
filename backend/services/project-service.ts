@@ -19,6 +19,7 @@ export class ProjectService implements CrudService<Project> {
   }
 
   getAll(): Promise<Project[]> {
+    console.log("---")
     return ProjectDb.all().then(px =>
       px.map((project: any) => ({
         ...project,

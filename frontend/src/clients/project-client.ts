@@ -3,7 +3,7 @@ import * as z from "myzod";
 import { projectSchema } from "../model/project";
 
 export function getProjects(): Promise<Project[]> {
-  return fetch("/api/project", {
+  return fetch("/api/projects", {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -14,7 +14,7 @@ export function getProjects(): Promise<Project[]> {
 }
 
 export function postProject(project: Project) {
-  return fetch("/api/project", {
+  return fetch("/api/projects", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -24,8 +24,8 @@ export function postProject(project: Project) {
   });
 }
 
-export function getProject(id: String): Promise<Project> {
-  return fetch(`/api/project/${id}`, {
+export function getProject(id: string): Promise<Project> {
+  return fetch(`/api/projects/${id}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -35,8 +35,8 @@ export function getProject(id: String): Promise<Project> {
     .then((json) => projectSchema.parse(json));
 }
 
-export function updateProject(project: Project) {
-  return fetch("/api/project", {
+export function updateProject(id: string, project: Project) {
+  return fetch(`/api/projects/${id}`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
@@ -46,12 +46,11 @@ export function updateProject(project: Project) {
   });
 }
 
-export function deleteProject(project: Project) {
-  return fetch("/api/project", {
+export function deleteProject(id: string) {
+  return fetch(`/api/projects/${id}`, {
     method: "DELETE",
     headers: {
-      "Content-Type": "application/json",
+      Accept: "application/json",
     },
-    body: JSON.stringify({ id: project.id }),
   });
 }
