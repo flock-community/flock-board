@@ -1,7 +1,7 @@
 import * as z from "../utils/myzod/mod.ts";
-import { literals } from "../utils/myzod/mod.ts";
-import type { Project } from "../../frontend/target/model/board.ts";
+import { Project } from "../../frontend/target/model/board.ts";
 import { object } from "./routes.ts";
+import { literals } from "../utils/myzod/mod.ts";
 
 export const projectSchema: z.Type<Project> = object({
   id: z.string(),
@@ -11,5 +11,4 @@ export const projectSchema: z.Type<Project> = object({
   updatedAt: z.date(),
   state: literals("OPEN", "IN_PROGRESS", "DONE"),
   color: z.string(),
-  people: z.array(z.string()),
 });

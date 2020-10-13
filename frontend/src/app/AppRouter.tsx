@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { Projects } from "../feature/projects/Projects";
 import { NoMatchFound } from "./NoMatchFound";
-import { Homepage } from "../feature/homepage/Homepage";
 import { AppLayout } from "./AppLayout";
 
 export function AppRouter() {

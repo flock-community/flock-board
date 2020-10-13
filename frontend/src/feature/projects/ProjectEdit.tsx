@@ -27,7 +27,7 @@ export function ProjectEdit(props: EditFormProps) {
   function onSubmit(data: ProjectData) {
     if (project == null) return;
 
-    const responsePromise = updateProject({
+    const responsePromise = updateProject(project.id, {
       ...project,
       ...data,
       updatedAt: new Date(),

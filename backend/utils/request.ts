@@ -1,13 +1,16 @@
+import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
 import { removePrefix } from "./string.ts";
 
 import type { ServerRequest } from "https://deno.land/std/http/server.ts";
 
+type Methods = "GET" | "POST" | "PUT" | "DELETE";
 export interface Request {
-  path: string[];
-  method: string;
-  body?: unknown;
+  path: [...string[]];
+  method: Methods;
   headers: Record<string, unknown>;
-  search: Record<string, string>;
+  query: Record<string, string>;
+  type?: string;
+  body?: unknown;
 }
 
 export async function internalizeRequest(
@@ -22,11 +25,30 @@ export async function internalizeRequest(
   }
   return {
     path: removePrefix(serverRequest.url, "/").split("/"),
-    method: serverRequest.method.toUpperCase(),
-    body: body,
+    method: serverRequest.method.toUpperCase() as Methods,
     headers: Object.fromEntries(serverRequest.headers),
-    search: searchIndex === -1 ? {} : Object.fromEntries(
+    query: searchIndex === -1 ? {} : Object.fromEntries(
       new URLSearchParams(serverRequest.url.substring(searchIndex)),
     ),
+    type: serverRequest.headers.get("content-type") ?? undefined,
+    body: body,
   };
+}
+
+export function matchRequest<S extends z.HttpSchema>(
+  schema: S,
+  request: Request,
+): z.ApiRouteNames<S> {
+  if ("options" in schema._def) {
+    const route = schema._def.options.find((it) =>
+      (("items" in it.shape.path._def)
+        ? it.shape.path.check(request.path)
+        : false) && it.shape.method.check(request.method)
+    );
+    if (route && "transformer" in route.shape.name._def) {
+      // @ts-ignore
+      return route.shape.name._def.output._def.value;
+    }
+  }
+  throw new Error("Rout not found");
 }

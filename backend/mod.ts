@@ -1,9 +1,9 @@
 import { serve } from "https://deno.land/std/http/server.ts";
 import { extname } from "https://deno.land/std/path/mod.ts";
 import { app, createApp } from "./app.ts";
-import { internalizeRequest } from "./utils/request.ts";
-import { routesSchema } from "./model/routes.ts";
+import { internalizeRequest, matchRequest } from "./utils/request.ts";
 import { api } from "./api.ts";
+import { openApi, router } from "./model/router.ts";
 
 createApp();
 
@@ -12,7 +12,31 @@ console.log("http://localhost:8000/");
 
 for await (const request of server) {
   try {
-    if (!request.url.startsWith("/api")) {
+    if (request.url === "/openapi") {
+      request.respond({
+        body: JSON.stringify(openApi),
+        status: 200,
+      });
+    } else if (request.url === "/swagger") {
+      request.respond({
+        body: await Deno.open("./swagger/index.html"),
+        status: 200,
+      });
+    } else if (request.url.startsWith("/api")) {
+      const req = await internalizeRequest(request);
+      const route = matchRequest(router, req);
+      const func = api[route];
+      // @ts-ignore
+      const res = await func(req);
+      request.respond(
+        {
+          status: res.status,
+          body: JSON.stringify(res.content),
+          headers: new Headers(res.headers),
+        },
+      );
+    } else {
+      console.log(request.url);
       const url = extname(request.url).includes(".")
         ? request.url
         : "/index.html";
@@ -22,9 +46,6 @@ for await (const request of server) {
           "content-type": contentType(url),
         }),
       });
-    } else {
-      const route = routesSchema.parse(await internalizeRequest(request));
-      request.respond(await api(route));
     }
   } catch (e) {
     request.respond({
