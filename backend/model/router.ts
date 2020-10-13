@@ -32,7 +32,7 @@ export const router = z.router([
   z.route({
     name: "GET_PROJECT",
     summary: "Info for a specific project",
-    tags: [z.literal("api"), z.literal("projects")],
+    tags: [z.literal("projects")],
     method: "GET",
     path: [
       z.literal("api"),
