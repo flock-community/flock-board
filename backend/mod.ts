@@ -25,7 +25,6 @@ for await (const request of server) {
     } else if (request.url.startsWith("/api")) {
       const req = await internalizeRequest(request);
       const route = matchRequest(router, req);
-      console.log("route name", route);
       const func = api[route];
       // @ts-ignore
       const res = await func(req);
