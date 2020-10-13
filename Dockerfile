@@ -9,6 +9,7 @@ USER deno
 COPY ./backend ./backend
 COPY ./frontend ./frontend
 COPY ./database ./database
+COPY ./swagger ./swagger
 
 ENV PROFILE=production
 
