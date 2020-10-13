@@ -7,8 +7,10 @@ const projects = z.reference("Projects", Projects);
 const errorResponse = z.response({
   status: 500,
   description: "Error occurred",
-  type: "application/json",
-  content: z.reference("Error", Error),
+  body: z.body({
+    type: "application/json",
+    content: z.reference("Error", Error),
+  }),
 });
 
 export const router = z.router([
@@ -22,8 +24,10 @@ export const router = z.router([
       z.response({
         status: 200,
         description: "A array of projects",
-        type: "application/json",
-        content: projects,
+        body: z.body({
+          type: "application/json",
+          content: projects,
+        }),
       }),
       errorResponse,
     ],
@@ -45,8 +49,10 @@ export const router = z.router([
       z.response({
         status: 200,
         description: "A array of projects",
-        type: "application/json",
-        content: project,
+        body: z.body({
+          type: "application/json",
+          content: project,
+        }),
       }),
       errorResponse,
     ],
@@ -61,15 +67,14 @@ export const router = z.router([
       z.literal("api"),
       z.literal("projects"),
     ],
-    query: {},
-    headers: {},
-    type: "application/json",
-    body: project,
+    body: z.body({
+      type: "application/json",
+      content: project,
+    }),
     responses: [
       z.response({
         status: 201,
         description: "Project create",
-        headers: {},
       }),
       errorResponse,
     ],
@@ -87,13 +92,15 @@ export const router = z.router([
         .name("projectId")
         .description("The id of the project"),
     ],
-    type: "application/json",
-    body: project,
+
+    body: z.body({
+      type: "application/json",
+      content: project,
+    }),
     responses: [
       z.response({
         status: 201,
         description: "Project updated",
-        type: "application/json",
       }),
       errorResponse,
     ],
@@ -115,7 +122,6 @@ export const router = z.router([
       z.response({
         status: 201,
         description: "Project deleted",
-        type: "application/json",
       }),
       errorResponse,
     ],
