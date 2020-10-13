@@ -73,11 +73,6 @@ const renderInput = (params: AutocompleteRenderInputParams) => (
   <TextField {...params} variant="outlined" label={"people"} />
 );
 
-function processChange(val: any) {
-  console.log(val);
-  return val;
-}
-
 export function ProjectForm(props: FormProps) {
   const project = props.project;
   const { register, handleSubmit, control } = useForm<ProjectData>();
