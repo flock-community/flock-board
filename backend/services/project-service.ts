@@ -6,7 +6,7 @@ export class ProjectService implements CrudService<Project> {
   async create(project: Project): Promise<Project> {
     return ProjectDb.create({
       ...project,
-      people: project.people.join(",")
+      people: project.people.join(","),
     });
   }
 
@@ -37,9 +37,10 @@ export class ProjectService implements CrudService<Project> {
     const project = await ProjectDb.find(id);
     const people = mutation.people ? mutation.people.join(",") : project.people;
     await ProjectDb.deleteById(project.id);
-    return ProjectDb.update(id, {
+    return ProjectDb.create({
       ...project,
       ...mutation,
+      id,
       people,
     });
   }

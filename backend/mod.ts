@@ -33,8 +33,8 @@ for await (const request of server) {
           status: res.status,
           body: JSON.stringify(res.body?.content),
           headers: new Headers({
-            ...(res.body) ? {"Content-Type": res.body.type} : {},
-            ...res?.headers ?? {}
+            ...(res.body) ? { "Content-Type": res.body.type } : {},
+            ...res?.headers ?? {},
           }),
         },
       );

@@ -11,7 +11,7 @@ export interface Request {
   query: Record<string, string>;
   body?: {
     type: string;
-    content: unknown
+    content: unknown;
   };
 }
 
@@ -19,11 +19,14 @@ export async function internalizeRequest(
   serverRequest: ServerRequest,
 ): Promise<Request> {
   const searchIndex = serverRequest.url.indexOf("?");
-  const body = (serverRequest.headers.get("content-type") === "application/json")
+  const body =
+    (serverRequest.headers.get("content-type") === "application/json")
       ? ({
         type: serverRequest.headers.get("content-type") ?? "",
-        content: JSON.parse(new TextDecoder().decode(await Deno.readAll(serverRequest.body)))
-    })
+        content: JSON.parse(
+          new TextDecoder().decode(await Deno.readAll(serverRequest.body)),
+        ),
+      })
       : undefined;
 
   return {
