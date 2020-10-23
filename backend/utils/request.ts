@@ -9,20 +9,23 @@ export interface Request {
   method: Methods;
   headers: Record<string, unknown>;
   query: Record<string, string>;
-  type?: string;
-  body?: unknown;
+  body?: {
+    type: string;
+    content: unknown
+  };
 }
 
 export async function internalizeRequest(
   serverRequest: ServerRequest,
 ): Promise<Request> {
   const searchIndex = serverRequest.url.indexOf("?");
-  let body;
-  if (serverRequest.headers.get("content-type") === "application/json") {
-    body = JSON.parse(
-      new TextDecoder().decode(await Deno.readAll(serverRequest.body)),
-    );
-  }
+  const body = (serverRequest.headers.get("content-type") === "application/json")
+      ? ({
+        type: serverRequest.headers.get("content-type") ?? "",
+        content: JSON.parse(new TextDecoder().decode(await Deno.readAll(serverRequest.body)))
+    })
+      : undefined;
+
   return {
     path: removePrefix(serverRequest.url, "/").split("/"),
     method: serverRequest.method.toUpperCase() as Methods,
@@ -30,7 +33,6 @@ export async function internalizeRequest(
     query: searchIndex === -1 ? {} : Object.fromEntries(
       new URLSearchParams(serverRequest.url.substring(searchIndex)),
     ),
-    type: serverRequest.headers.get("content-type") ?? undefined,
     body: body,
   };
 }

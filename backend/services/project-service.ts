@@ -4,7 +4,10 @@ import { Project as ProjectDb } from "../../database/mod.ts";
 
 export class ProjectService implements CrudService<Project> {
   async create(project: Project): Promise<Project> {
-    return ProjectDb.create({ ...project, people: project.people.join(",") });
+    return ProjectDb.create({
+      ...project,
+      people: project.people.join(",")
+    });
   }
 
   delete(id: Project["id"]): Promise<void> {
