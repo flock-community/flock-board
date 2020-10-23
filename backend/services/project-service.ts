@@ -14,7 +14,7 @@ export class ProjectService implements CrudService<Project> {
   get(id: Project["id"]): Promise<Project> {
     return ProjectDb.find(id).then((project) => ({
       ...project,
-      people: project.people.split(","),
+      people: project.people ? project.people.split(",") : [],
     }));
   }
 
@@ -22,7 +22,7 @@ export class ProjectService implements CrudService<Project> {
     return ProjectDb.all().then((px) =>
       px.map((project: any) => ({
         ...project,
-        people: project.people.split(","),
+        people: project.people ? project.people.split(",") : [],
       }))
     );
   }
