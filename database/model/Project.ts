@@ -11,6 +11,8 @@ export class Project extends Model {
     state: DataTypes.enum(["OPEN", "IN_PROGRESS", "DONE"]),
     color: DataTypes.STRING,
     people: DataTypes.STRING,
+    organization: DataTypes.STRING,
+    repo: DataTypes.STRING
   };
 
   static defaults = {};

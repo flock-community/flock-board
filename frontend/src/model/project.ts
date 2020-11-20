@@ -10,4 +10,6 @@ export const projectSchema: z.Type<Project> = z.object({
   state: z.literals("OPEN", "IN_PROGRESS", "DONE"),
   color: z.string(),
   people: z.array(z.string()),
+  organization: z.string(),
+  repo: z.string(),
 });
