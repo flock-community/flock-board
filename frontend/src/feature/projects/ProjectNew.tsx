@@ -40,6 +40,8 @@ function getNewProject(): Project {
     updatedAt: new Date(),
     color: items[Math.floor(Math.random() * items.length)],
     people: [],
+    organization: "flock-community",
+    repo: "",
   };
 }
 

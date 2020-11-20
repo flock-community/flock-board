@@ -17,6 +17,7 @@ import { useRouteMatch, useHistory } from "react-router-dom";
 import { clientResponseHandler } from "../../util/client.hooks";
 import { dateFormat } from "../../util/date.format";
 import { appendUrl } from "../../util/url.helper";
+import { ProjectDetail } from "./ProjectDetail";
 
 interface ProjectCardProps {
   project: Project;
@@ -67,6 +68,7 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
         <Typography variant="body2" component="p">
           {project.description}
         </Typography>
+        <ProjectDetail project={project} />
       </CardContent>
     </Card>
   );

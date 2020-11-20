@@ -23,6 +23,8 @@ export interface ProjectData {
   description: string;
   state: ProjectState;
   people: string[];
+  organization: string;
+  repo: string;
 }
 interface FormProps {
   onSubmit: (project: ProjectData) => void;
@@ -125,6 +127,26 @@ export function ProjectForm(props: FormProps) {
               )}
               name="people"
               control={control}
+            />
+          </Grid>
+
+          <Grid container item justify="center" xs={12}>
+            <TextField
+              className={classes.input}
+              name="organization"
+              inputRef={register}
+              defaultValue={project.organization}
+              label="Github organization"
+            />
+          </Grid>
+
+          <Grid container item justify="center" xs={12}>
+            <TextField
+              className={classes.input}
+              name="repo"
+              inputRef={register}
+              defaultValue={project.repo}
+              label="Github repository"
             />
           </Grid>
 
