@@ -1,8 +1,8 @@
-import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
-import { router } from "./model/router.ts";
+import * as z from "https://unpkg.com/zod-endpoints@0.0.17/lib/deno/mod.ts";
+import { endpoints } from "./model/endpoints.ts";
 import { app } from "./app.ts";
 
-export const api: z.Api<typeof router> = {
+export const api: z.Api<typeof endpoints> = {
   "GET_PROJECT": ({ path }) =>
     app.services.projects.get(path[2]).then((it) => ({
       status: 200,

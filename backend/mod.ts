@@ -3,7 +3,7 @@ import { extname } from "https://deno.land/std/path/mod.ts";
 import { app, createApp } from "./app.ts";
 import { internalizeRequest, matchRequest } from "./utils/request.ts";
 import { api } from "./api.ts";
-import { openApi, router } from "./model/router.ts";
+import { openApi, endpoints } from "./model/endpoints.ts";
 
 createApp();
 
@@ -23,8 +23,13 @@ for await (const request of server) {
         status: 200,
       });
     } else if (request.url.startsWith("/api")) {
+
+
+      const url = request.url;
+
+
       const req = await internalizeRequest(request);
-      const route = matchRequest(router, req);
+      const route = matchRequest(endpoints, req);
       const func = api[route];
       // @ts-ignore
       const res = await func(req);
@@ -39,7 +44,6 @@ for await (const request of server) {
         },
       );
     } else {
-      console.log(request.url);
       const url = extname(request.url).includes(".")
         ? request.url
         : "/index.html";

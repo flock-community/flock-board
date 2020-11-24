@@ -1,4 +1,4 @@
-import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
+import * as z from "https://unpkg.com/zod-endpoints@0.0.17/lib/deno/mod.ts";
 import { Error, Project, Projects } from "./domain.ts";
 
 const project = z.reference("Project", Project);
@@ -13,8 +13,8 @@ const errorResponse = z.response({
   }),
 });
 
-export const router = z.router([
-  z.route({
+export const endpoints = z.union([
+  z.endpoint({
     name: "GET_PROJECTS",
     summary: "List all projects",
     tags: [z.literal("projects")],
@@ -33,7 +33,7 @@ export const router = z.router([
     ],
   }),
 
-  z.route({
+  z.endpoint({
     name: "GET_PROJECT",
     summary: "Info for a specific project",
     tags: [z.literal("projects")],
@@ -58,7 +58,7 @@ export const router = z.router([
     ],
   }),
 
-  z.route({
+  z.endpoint({
     name: "CREATE_PROJECT",
     summary: "Create a new project",
     tags: [z.literal("projects")],
@@ -80,7 +80,7 @@ export const router = z.router([
     ],
   }),
 
-  z.route({
+  z.endpoint({
     name: "UPDATE_PROJECT",
     summary: "Update a project",
     tags: [z.literal("projects")],
@@ -106,7 +106,7 @@ export const router = z.router([
     ],
   }),
 
-  z.route({
+  z.endpoint({
     name: "DELETE_PROJECT",
     summary: "Delete a project",
     tags: [z.literal("projects")],
@@ -129,4 +129,4 @@ export const router = z.router([
 ]);
 
 const info = { version: "1.0.0", title: "Flock. board" };
-export const openApi = z.openApi(router, info);
+export const openApi = z.openApi(endpoints, info);

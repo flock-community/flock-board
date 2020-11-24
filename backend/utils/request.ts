@@ -1,4 +1,4 @@
-import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
+import * as z from "https://unpkg.com/zod-endpoints@0.0.17/lib/deno/mod.ts";
 import { removePrefix } from "./string.ts";
 
 import type { ServerRequest } from "https://deno.land/std/http/server.ts";
@@ -43,7 +43,7 @@ export async function internalizeRequest(
 export function matchRequest<S extends z.HttpSchema>(
   schema: S,
   request: Request,
-): z.ApiRouteNames<S> {
+): z.ApiNames<S> {
   if ("options" in schema._def) {
     const route = schema._def.options.find((it) =>
       (("items" in it.shape.path._def)

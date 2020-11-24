@@ -1,5 +1,4 @@
-import * as z from "https://raw.githubusercontent.com/flock-community/zod-router/master/mod.ts";
-import { ProjectState } from "../../frontend/target/model/board.ts";
+import * as z from "https://unpkg.com/zod-endpoints@0.0.17/lib/deno/mod.ts";
 
 export const Error = z.object({
   code: z.integer(),
