@@ -17,7 +17,6 @@ import AddIcon from "@material-ui/icons/Add";
 import { ProjectEdit } from "./ProjectEdit";
 import { ProjectNew } from "./ProjectNew";
 import { appendUrl } from "../../util/url.helper";
-import { ProjectDetail } from "./ProjectDetail";
 
 const useStyles = makeStyles((theme) => ({
   list: {
